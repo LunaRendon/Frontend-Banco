@@ -1,0 +1,42 @@
+<div class="card">
+  <div class="flex items-center justify-between mb-6">
+
+  <div class="flex justify-between items-center mb-4">
+      <div class="text-xl md:text-2xl font-semibold text-surface-900 dark:text-surface-0 flex items-center gap-2">
+        <i class="pi pi-bell text-primary text-2xl"></i>
+        Notificaciones
+      </div>
+    </div>
+
+    <div>
+      <button pButton type="button" icon="pi pi-ellipsis-v" class="p-button-rounded p-button-text p-button-plain" (click)="menu.toggle($event)"></button>
+      <p-menu #menu [popup]="true" [model]="items"></p-menu>
+    </div>
+  </div>
+
+  <ng-container *ngIf="notificaciones.length > 0; else sinNotificaciones">
+    <ul class="p-0 m-0 list-none">
+      <li *ngFor="let n of notificaciones" class="flex items-center py-2 border-b border-surface" [ngClass]="n.tipo">
+        <div class="w-12 h-12 flex items-center justify-center rounded-full mr-4 shrink-0"
+             [ngClass]="{
+               'bg-yellow-100 text-yellow-700': n.tipo === 'alerta',
+               'bg-red-100 text-red-700': n.tipo === 'vencido'
+             }">
+          <i class="pi" [ngClass]="{
+            'pi-exclamation-triangle': n.tipo === 'alerta',
+            'pi-times-circle': n.tipo === 'vencido'
+          }"></i>
+        </div>
+        <span class="text-surface-900 dark:text-surface-0 leading-normal">
+          {{ n.mensaje }}
+        </span>
+      </li>
+    </ul>
+  </ng-container>
+
+  <ng-template #sinNotificaciones>
+    <div class="text-muted-color text-center p-3">
+      No hay notificaciones pendientes.
+    </div>
+  </ng-template>
+</div>
