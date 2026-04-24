@@ -1,0 +1,101 @@
+<app-floating-configurator />
+
+<div
+  class="bg-surface-50 dark:bg-surface-950 flex items-center justify-center min-h-screen min-w-screen overflow-hidden"
+>
+  <div class="flex flex-col items-center justify-center">
+    <div
+      style="border-radius: 56px; padding: 0.3rem; background: linear-gradient(180deg, var(--primary-color) 10%, rgba(33,150,243,0) 30%)"
+    >
+      <div
+        class="w-full bg-surface-0 dark:bg-surface-900 py-12 px-6 sm:px-16"
+        style="border-radius: 53px; max-width: 520px"
+      >
+        <div class="text-center mb-6">
+          <img
+            src="assets/logos/logotipo.png"
+            alt="Logo Biblioteca"
+            class="mx-auto mb-4 w-24 h-auto"
+          />
+          <i class="pi pi-user-plus text-3xl text-primary mb-3"></i>
+          <div
+            class="text-surface-900 dark:text-surface-0 text-2xl font-semibold mb-2"
+          >
+            Crear Cuenta
+          </div>
+          <span class="text-muted-color font-medium text-sm">
+            Regístrate para acceder
+          </span>
+        </div>
+
+        <div>
+          <input
+            pInputText
+            type="text"
+            placeholder="Nombre completo"
+            class="w-full mb-3"
+            [(ngModel)]="nombre"
+          />
+          <input
+            pInputText
+            type="text"
+            placeholder="Nombre de usuario"
+            class="w-full mb-3"
+            [(ngModel)]="nombre_usuario"
+          />
+          <input
+            pInputText
+            type="email"
+            placeholder="Correo electrónico"
+            class="w-full mb-3"
+            [(ngModel)]="email"
+          />
+          <input
+            pInputText
+            type="tel"
+            placeholder="Teléfono"
+            class="w-full mb-3"
+            [(ngModel)]="telefono"
+          />
+
+          <p-password
+            [(ngModel)]="password"
+            placeholder="Contraseña"
+            [feedback]="false"
+            [toggleMask]="true"
+            styleClass="w-full mb-3"
+          ></p-password>
+
+          <p-password
+            [(ngModel)]="confirmPassword"
+            placeholder="Confirmar contraseña"
+            [feedback]="false"
+            [toggleMask]="true"
+            styleClass="w-full mb-3"
+          ></p-password>
+
+          <div *ngIf="message" class="text-center mb-3 text-sm">
+            <span
+              [class.text-red-500]="message.includes('')"
+              [class.text-green-600]="message.includes('')"
+              >{{ message }}</span
+            >
+          </div>
+
+          <p-button
+            label="Registrar"
+            styleClass="w-full mb-2"
+            (onClick)="onRegister()"
+          ></p-button>
+
+          <div class="text-center mt-4">
+            <span class="text-muted-color text-sm">
+              ¿Ya tienes cuenta?
+              <a routerLink="/auth/login" class="text-primary">Iniciar sesión</a>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
