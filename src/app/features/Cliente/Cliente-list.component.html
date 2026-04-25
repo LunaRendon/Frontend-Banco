@@ -1,0 +1,125 @@
+
+<p-toolbar styleClass="mb-6">
+  <ng-template pTemplate="start">
+    <p-button label="Nuevo" icon="pi pi-plus" severity="secondary" class="mr-2"
+      (click)="openNew()"></p-button>
+
+    <p-button label="Eliminar" icon="pi pi-trash" outlined severity="secondary"
+      [disabled]="!selectedClientes || !selectedClientes.length"
+      (click)="deleteSelectedClientes()"></p-button>
+  </ng-template>
+</p-toolbar>
+
+<p>Tabla cargando...</p>
+<p-table #dt [value]="clientes" [(selection)]="selectedClientes" dataKey="id_cliente"
+  [paginator]="true" [rows]="10" [loading]="loading" [rowHover]="true"
+  [globalFilterFields]="['nombre','num_documento','tipo_documento','telefono','direccion','correo','id_cliente']"
+  [rowsPerPageOptions]="[10,20,30]"
+  currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} clientes">
+
+  <!-- CAPTION -->
+  <ng-template pTemplate="caption">
+    <div class="flex items-center justify-between">
+      <h5 class="m-0">Gestión de Clientes</h5>
+      <p-iconfield>
+        <p-inputicon styleClass="pi pi-search"></p-inputicon>
+        <input pInputText type="text" (input)="onGlobalFilter($event)" placeholder="Buscar..." />
+      </p-iconfield>
+    </div>
+  </ng-template>
+
+  <!-- HEADER -->
+  <ng-template pTemplate="header">
+    <tr>
+      <th style="width:3rem"><p-tableHeaderCheckbox></p-tableHeaderCheckbox></th>
+      <th pSortableColumn="nombre">Nombre <p-sortIcon field="nombre"></p-sortIcon></th>
+      <th pSortableColumn="num_documento">Número de Documento <p-sortIcon field="num_documento"></p-sortIcon></th>
+      <th pSortableColumn="tipo_documento">Tipo de Documento <p-sortIcon field="tipo_documento"></p-sortIcon></th>
+      <th pSortableColumn="telefono">Teléfono <p-sortIcon field="telefono"></p-sortIcon></th>
+      <th pSortableColumn="direccion">Dirección <p-sortIcon field="direccion"></p-sortIcon></th>
+    </tr>
+  </ng-template>
+
+  <!-- BODY -->
+  <ng-template pTemplate="body" let-cliente>
+    <tr>
+      <td><p-tableCheckbox [value]="cliente"></p-tableCheckbox></td>
+      <td>{{ cliente.nombre }}</td>
+      <td>{{ cliente.num_documento }}</td>
+      <td>{{ cliente.tipo_documento }}</td>
+      <td>{{ cliente.telefono }}</td>
+      <td>{{ cliente.direccion }}</td>
+      <td>{{ cliente.correo }}</td>
+      <td>{{ cliente.id_cliente }}</td>
+      <td>{{ cliente.fecha_creacion | date:'short' }}</td>
+    </tr>
+  </ng-template>
+</p-table>
+
+
+<!-- DIALOG -->
+<p-dialog [(visible)]="clienteDialog" [style]="{width: '500px'}"
+  header="Detalles del Cliente" [modal]="true">
+
+  <div class="flex flex-col gap-4">
+
+    <div>
+      <label for="nombre" class="block font-bold mb-2">Nombre</label>
+      <input id="nombre" type="text" pInputText [(ngModel)]="cliente.nombre" required autofocus />
+      <small class="text-red-500" *ngIf="submitted && !cliente.nombre">
+        El nombre es obligatorio.
+      </small>
+    </div>
+
+    <div>
+      <label for="num_documento" class="block font-bold mb-2">Número de Documento</label>
+      <input id="num_documento" type="text" pInputText [(ngModel)]="cliente.num_documento" required />
+      <small class="text-red-500" *ngIf="submitted && !cliente.num_documento">
+        El número de documento es obligatorio.
+      </small>
+    </div>
+
+    <div>
+      <label for="menu">Tipo de documento:</label>
+      <select id="menu" [(ngModel)]="cliente.tipo_documento">
+        <option value="" disabled>Seleccione una opción</option>
+        <option value="CC">Cédula Ciudadanía</option>
+        <option value="TI">Tarjeta de Identidad</option>
+        <option value="PA">Pasaporte</option>
+        <option value="CE">Cédula Extranjera</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="telefono" class="block font-bold mb-2">Teléfono</label>
+      <input id="telefono" type="text" pInputText [(ngModel)]="cliente.telefono" required />
+      <small class="text-red-500" *ngIf="submitted && !cliente.telefono">
+        El teléfono es obligatorio.
+      </small>
+    </div>
+
+    <div>
+      <label for="direccion" class="block font-bold mb-2">Dirección</label>
+      <input id="direccion" type="text" pInputText [(ngModel)]="cliente.direccion" required />
+      <small class="text-red-500" *ngIf="submitted && !cliente.direccion">
+        La dirección es obligatoria.
+      </small>
+    </div>
+
+    <div>
+      <label for="correo" class="block font-bold mb-2">Correo Electrónico</label>
+      <input id="correo" type="email" pInputText [(ngModel)]="cliente.correo" required />
+      <small class="text-red-500" *ngIf="submitted && !cliente.correo">
+        El correo electrónico es obligatorio.
+      </small>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" icon="pi pi-times" text (click)="hideDialog()"></p-button>
+    <p-button label="Guardar" icon="pi pi-check" (click)="saveCliente()"></p-button>
+  </ng-template>
+</p-dialog>
+<p-confirmdialog [style]="{ width: '450px' }"></p-confirmdialog>
