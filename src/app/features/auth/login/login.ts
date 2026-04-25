@@ -30,7 +30,7 @@ export class Login {
   contrasena = '';
   errorMessage = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) { }
 
   onLogin() {
     const success = this.authService.login(this.nombre_usuario, this.contrasena);

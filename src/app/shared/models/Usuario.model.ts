@@ -2,7 +2,7 @@
  * Modelo para la entidad Usuario
  */
 export interface Usuario {
-  id_usuario: string; 
+  id_usuario: string;
   id: String;
   nombre: string;
   nombre_usuario: string;
