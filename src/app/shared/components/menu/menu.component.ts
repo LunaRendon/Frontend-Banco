@@ -36,14 +36,12 @@ export class AppMenu {
             {
                 label: 'Gestión',
                 items: [
-                    { label: 'Biblioteca', icon: 'pi pi-fw pi-book', routerLink: ['/bibliotecas'] },
-                    { label: 'Categorías', icon: 'pi pi-fw pi-tags', routerLink: ['/categorias'] },
-                    ...(isAdmin ? [{ label: 'Clientes', icon: 'pi pi-fw pi-users', routerLink: ['/clientes'] }] : []),
-                    { label: 'Materiales Bibliográficos', icon: 'pi pi-fw pi-file', routerLink: ['/materiales'] },
-                    ...(isAdmin ? [{ label: 'Préstamos', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['/prestamos'] }] : []),
-                    ...(isAdmin ? [{ label: 'Reservas', icon: 'pi pi-fw pi-calendar-plus', routerLink: ['/reservas'] }] : []),
-                    ...(isAdmin ? [{ label: 'Sanciones', icon: 'pi pi-fw pi-exclamation-triangle', routerLink: ['/sanciones'] }] : []),
-                    { label: 'Sedes', icon: 'pi pi-fw pi-map-marker', routerLink: ['/sedes'] },
+                    { label: 'Bancos', icon: 'pi pi-fw pi-book', routerLink: ['/bancos'] },
+                    { label: 'Clientes', icon: 'pi pi-fw pi-tags', routerLink: ['/clientes'] },
+                    ...(isAdmin ? [{ label: 'Cuentas', icon: 'pi pi-fw pi-users', routerLink: ['/cuentas'] }] : []),
+                    { label: 'Tarjetas ', icon: 'pi pi-fw pi-file', routerLink: ['/tarjetas'] },
+                    ...(isAdmin ? [{ label: 'Operaciones', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['/operaciones'] }] : []),
+                    ...(isAdmin ? [{ label: 'Usuarios de la aplicación', icon: 'pi pi-fw pi-calendar-plus', routerLink: ['/usuarios-aplicacion'] }] : []),
                     ...(isAdmin ? [{ label: 'Usuarios', icon: 'pi pi-fw pi-user', routerLink: ['/usuarios'] }] : [])
                 ]
             },

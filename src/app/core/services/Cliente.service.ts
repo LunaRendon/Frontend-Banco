@@ -4,6 +4,7 @@ import { Cliente, ClienteFilters, CreateClienteRequest, UpdateClienteRequest } f
 import { PaginationParams } from '../models/api-response.models';
 import { ApiService } from './api.service';
 
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,13 +13,16 @@ export class ClienteService {
 
   constructor(private apiService: ApiService) {}
 
-  getClientes( pagination: PaginationParams, filters?: ClienteFilters): Observable<Cliente[]> {
-    return this.apiService.getPaginated<Cliente>(`${this.endpoint}/$`,pagination,filters);
-  }
+  getClientes(id_banco: string, pagination: PaginationParams): Observable<Cliente[]> {
+  return this.apiService.getPaginated<Cliente>(
+    `${this.endpoint}/${id_banco}`,
+    pagination
+  );
+}
 
  
-  getClienteById(id_banco: string, codigo: string): Observable<Cliente> {
-    return this.apiService.get<Cliente>(`${this.endpoint}/${id_banco}/cliente/${codigo}`);
+  getClienteById(id_banco: string, id_cliente: string): Observable<Cliente> {
+    return this.apiService.get<Cliente>(`${this.endpoint}/${id_banco}/cliente/${id_cliente}`);
   }
 
  
@@ -27,13 +31,13 @@ export class ClienteService {
   }
 
  
-  updateCliente(id_banco: string, codigo: string, cliente: UpdateClienteRequest): Observable<Cliente> {
-    return this.apiService.put<Cliente>(`${this.endpoint}/${id_banco}/cliente/${codigo}`, cliente);
+  updateCliente(id_banco: string, id_cliente: string, cliente: UpdateClienteRequest): Observable<Cliente> {
+    return this.apiService.put<Cliente>(`${this.endpoint}/${id_banco}/cliente/${id_cliente}`, cliente);
   }
 
  
-  deleteCliente(id_banco: string, codigo: string): Observable<any> {
-    return this.apiService.delete<any>(`${this.endpoint}/${id_banco}/cliente/${codigo}`);
+  deleteCliente(id_banco: string, id_cliente: string): Observable<any> {
+    return this.apiService.delete<any>(`${this.endpoint}/${id_banco}/cliente/${id_cliente}`);
   }
 
  
@@ -42,13 +46,17 @@ export class ClienteService {
   }
 
  
-  getClientesByNumDocumento(id_banco: string, num_documento: string): Observable<Cliente[]> {
-    return this.apiService.get<Cliente[]>(`${this.endpoint}/${id_banco}/tipo/${num_documento}`);
+  getClientesByTipo(id_banco: string, tipoCliente: string): Observable<Cliente[]> {
+    return this.apiService.get<Cliente[]>(`${this.endpoint}/${id_banco}/tipo/${tipoCliente}`);
   }
 
  
-  getClientesByDTipoDocumento(id_banco: string, tipo_documento: string): Observable<Cliente[]> {
-    return this.apiService.get<Cliente[]>(`${this.endpoint}/${id_banco}/detalle/${tipo_documento}`);
+  getClientesByDetalle(id_banco: string, detalleTipo: string): Observable<Cliente[]> {
+    return this.apiService.get<Cliente[]>(`${this.endpoint}/${id_banco}/detalle/${detalleTipo}`);
   }
 
+ 
+  getClientesByVetado(id_banco: string, vetado: boolean): Observable<Cliente[]> {
+    return this.apiService.get<Cliente[]>(`${this.endpoint}/${id_banco}/vetado/${vetado}`);
+  }
 }
