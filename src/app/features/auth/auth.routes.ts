@@ -7,7 +7,7 @@ import { LoginGuard } from 'src/app/core/guards/login.guard';
 
 
 export const authRoutes: Routes = [
-  { path: 'access', component: Access},
+  { path: 'access', component: Access },
   { path: 'login', component: Login, canActivate: [LoginGuard] },
   { path: 'forgot', component: ForgotPassword, canActivate: [LoginGuard] },
   { path: 'register', component: Register, canActivate: [LoginGuard] },
