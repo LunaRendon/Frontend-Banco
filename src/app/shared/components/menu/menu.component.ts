@@ -5,23 +5,18 @@ import { MenuItem } from 'primeng/api';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { AppMenuitem } from 'src/app/shared/components/menuitem/menuitem.component';
 
-
 @Component({
     selector: 'app-menu',
     standalone: true,
-    imports: [CommonModule, 
-        AppMenuitem, 
-        RouterModule,
-        ],
-    templateUrl: './menu.component.html',
+    imports: [CommonModule, AppMenuitem, RouterModule],
+    templateUrl: './menu.component.html'
 })
-
 export class AppMenu {
     model: MenuItem[] = [];
 
     constructor(
         private authService: AuthService,
-        private router: Router,
+        private router: Router
     ) {}
 
     ngOnInit() {
@@ -45,8 +40,7 @@ export class AppMenu {
                     ...(isAdmin ? [{ label: 'Usuarios', icon: 'pi pi-fw pi-user', routerLink: ['/usuarios'] }] : [])
                 ]
             },
-            
-      
+
             {
                 label: 'Cuenta',
                 icon: 'ppi pi-fw pi-user',
@@ -60,6 +54,6 @@ export class AppMenu {
 
     logout() {
         this.authService.logout();
-        this.router.navigate(['/auth/login']); 
+        this.router.navigate(['/auth/login']);
     }
 }

@@ -8,104 +8,155 @@ import { CuentaService } from 'src/app/core/services/Cuenta.service';
  * - La barra de progreso refleja porcentajes reales
  */
 @Component({
-  selector: 'app-tipo-cuentas-widget',
-  standalone: true,
-  imports: [CommonModule],
-  template: `
-    <div class="widget-card">
-      <div class="widget-header">
-        <h4 class="widget-title">🏦 Tipos de Cuenta</h4>
-        <span class="badge">{{ totalCuentas }} total</span>
-      </div>
+    selector: 'app-tipo-cuentas-widget',
+    standalone: true,
+    imports: [CommonModule],
+    template: `
+        <div class="widget-card">
+            <div class="widget-header">
+                <h4 class="widget-title">🏦 Tipos de Cuenta</h4>
+                <span class="badge">{{ totalCuentas }} total</span>
+            </div>
 
-      <div *ngIf="loading" class="loading-list">
-        <div *ngFor="let _ of [1,2]" class="skeleton-item" style="height:52px"></div>
-      </div>
+            <div *ngIf="loading" class="loading-list">
+                <div *ngFor="let _ of [1, 2]" class="skeleton-item" style="height:52px"></div>
+            </div>
 
-      <div *ngFor="let t of tipos; let i = index" class="tipo-row">
-        <div class="tipo-header">
-          <span class="tipo-nombre">{{ t.nombre }}</span>
-          <span class="tipo-count">{{ t.cantidad }}</span>
+            <div *ngFor="let t of tipos; let i = index" class="tipo-row">
+                <div class="tipo-header">
+                    <span class="tipo-nombre">{{ t.nombre }}</span>
+                    <span class="tipo-count">{{ t.cantidad }}</span>
+                </div>
+                <div class="barra-fondo">
+                    <div class="barra-fill" [class]="'barra-' + (i % 2 === 0 ? 'blue' : 'purple')" [style.width.%]="totalCuentas ? (t.cantidad / totalCuentas) * 100 : 0"></div>
+                </div>
+                <span class="tipo-pct">{{ totalCuentas ? ((t.cantidad / totalCuentas) * 100 | number: '1.0-0') : 0 }}%</span>
+            </div>
+
+            <div *ngIf="!loading && tipos.length === 0" class="empty-state">Sin cuentas registradas</div>
         </div>
-        <div class="barra-fondo">
-          <div class="barra-fill"
-               [class]="'barra-' + (i % 2 === 0 ? 'blue' : 'purple')"
-               [style.width.%]="totalCuentas ? (t.cantidad / totalCuentas * 100) : 0">
-          </div>
-        </div>
-        <span class="tipo-pct">{{ totalCuentas ? (t.cantidad / totalCuentas * 100 | number:'1.0-0') : 0 }}%</span>
-      </div>
 
-      <div *ngIf="!loading && tipos.length === 0" class="empty-state">Sin cuentas registradas</div>
-    </div>
-
-    <style>
-      .widget-card {
-        background: white;
-        border-radius: 16px;
-        padding: 1.25rem;
-        box-shadow: 0 2px 16px rgba(0,0,0,0.08);
-      }
-      .widget-header {
-        display: flex; justify-content: space-between; align-items: center;
-        margin-bottom: 1rem;
-      }
-      .widget-title { font-size: 1rem; font-weight: 700; color: #1e293b; margin: 0; }
-      .badge {
-        font-size: 0.7rem; background: #fef3c7; color: #d97706;
-        padding: 2px 8px; border-radius: 999px; font-weight: 600;
-      }
-      .tipo-row { margin-bottom: 1rem; }
-      .tipo-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
-      .tipo-nombre { font-size: 0.875rem; font-weight: 600; color: #334155; }
-      .tipo-count { font-size: 0.875rem; font-weight: 700; color: #1e293b; }
-      .barra-fondo {
-        width: 100%; height: 8px; background: #f1f5f9;
-        border-radius: 999px; overflow: hidden;
-      }
-      .barra-fill {
-        height: 100%; border-radius: 999px;
-        transition: width 0.8s ease;
-      }
-      .barra-blue   { background: linear-gradient(90deg, #3b82f6, #6366f1); }
-      .barra-purple { background: linear-gradient(90deg, #8b5cf6, #ec4899); }
-      .tipo-pct { font-size: 0.7rem; color: #94a3b8; }
-      .loading-list { display: flex; flex-direction: column; gap: 0.75rem; }
-      .skeleton-item {
-        border-radius: 10px;
-        background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
-        background-size: 200% 100%;
-        animation: shimmer 1.5s infinite;
-      }
-      @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-      .empty-state { text-align: center; color: #94a3b8; padding: 2rem; font-size: 0.875rem; }
-    </style>
-  `
+        <style>
+            .widget-card {
+                background: white;
+                border-radius: 16px;
+                padding: 1.25rem;
+                box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+            }
+            .widget-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 1rem;
+            }
+            .widget-title {
+                font-size: 1rem;
+                font-weight: 700;
+                color: #1e293b;
+                margin: 0;
+            }
+            .badge {
+                font-size: 0.7rem;
+                background: #fef3c7;
+                color: #d97706;
+                padding: 2px 8px;
+                border-radius: 999px;
+                font-weight: 600;
+            }
+            .tipo-row {
+                margin-bottom: 1rem;
+            }
+            .tipo-header {
+                display: flex;
+                justify-content: space-between;
+                margin-bottom: 4px;
+            }
+            .tipo-nombre {
+                font-size: 0.875rem;
+                font-weight: 600;
+                color: #334155;
+            }
+            .tipo-count {
+                font-size: 0.875rem;
+                font-weight: 700;
+                color: #1e293b;
+            }
+            .barra-fondo {
+                width: 100%;
+                height: 8px;
+                background: #f1f5f9;
+                border-radius: 999px;
+                overflow: hidden;
+            }
+            .barra-fill {
+                height: 100%;
+                border-radius: 999px;
+                transition: width 0.8s ease;
+            }
+            .barra-blue {
+                background: linear-gradient(90deg, #3b82f6, #6366f1);
+            }
+            .barra-purple {
+                background: linear-gradient(90deg, #8b5cf6, #ec4899);
+            }
+            .tipo-pct {
+                font-size: 0.7rem;
+                color: #94a3b8;
+            }
+            .loading-list {
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            .skeleton-item {
+                border-radius: 10px;
+                background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+                background-size: 200% 100%;
+                animation: shimmer 1.5s infinite;
+            }
+            @keyframes shimmer {
+                0% {
+                    background-position: 200% 0;
+                }
+                100% {
+                    background-position: -200% 0;
+                }
+            }
+            .empty-state {
+                text-align: center;
+                color: #94a3b8;
+                padding: 2rem;
+                font-size: 0.875rem;
+            }
+        </style>
+    `
 })
 export class TipoCuentasWidget implements OnInit {
-  tipos: { nombre: string; cantidad: number }[] = [];
-  totalCuentas = 0;
-  loading = true;
+    tipos: { nombre: string; cantidad: number }[] = [];
+    totalCuentas = 0;
+    loading = true;
 
-  constructor(private cuentaService: CuentaService) {}
+    constructor(private cuentaService: CuentaService) {}
 
-  ngOnInit() {
-    this.cargarCuentas();
-  }
+    ngOnInit() {
+        this.cargarCuentas();
+    }
 
-  cargarCuentas() {
-    this.cuentaService.getCuentas({ page: 1, limit: 1000 }, {}).subscribe({
-      next: (cuentas: any[]) => {
-        const conteo: Record<string, number> = {};
-        (cuentas || []).forEach(c => {
-          const tipo = c.tipo_cuenta || 'Sin tipo';
-          conteo[tipo] = (conteo[tipo] || 0) + 1;
+    cargarCuentas() {
+        this.cuentaService.getCuentas({ page: 1, limit: 1000 }, {}).subscribe({
+            next: (cuentas: any[]) => {
+                const conteo: Record<string, number> = {};
+                (cuentas || []).forEach((c) => {
+                    const tipo = c.tipo_cuenta || 'Sin tipo';
+                    conteo[tipo] = (conteo[tipo] || 0) + 1;
+                });
+                this.tipos = Object.entries(conteo).map(([nombre, cantidad]) => ({ nombre, cantidad }));
+                this.totalCuentas = cuentas?.length || 0;
+                this.loading = false;
+            },
+            error: () => {
+                this.loading = false;
+            }
         });
-        this.tipos = Object.entries(conteo).map(([nombre, cantidad]) => ({ nombre, cantidad }));
-        this.totalCuentas = cuentas?.length || 0;
-        this.loading = false;
-      },
-      error: () => { this.loading = false; }
-    });
-  }
+    }
 }

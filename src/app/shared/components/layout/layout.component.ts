@@ -10,8 +10,8 @@ import { LayoutService } from 'src/app/shared/service/layout.service';
 @Component({
     selector: 'app-layout',
     standalone: true,
-    imports: [CommonModule, RouterModule, AppTopbar, AppSidebar, AppFooter ],
-    templateUrl: './layout.component.html',
+    imports: [CommonModule, RouterModule, AppTopbar, AppSidebar, AppFooter],
+    templateUrl: './layout.component.html'
 })
 export class AppLayout implements OnDestroy {
     overlayMenuOpenSubscription: Subscription;
@@ -39,7 +39,7 @@ export class AppLayout implements OnDestroy {
         });
 
         // cerrar menú en navegación
-        this.router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe(() => {
+        this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
             this.hideMenu();
         });
     }
@@ -49,12 +49,11 @@ export class AppLayout implements OnDestroy {
         const topbarEl = document.querySelector('.layout-menu-button');
         const eventTarget = event.target as Node;
 
-        return !(sidebarEl?.isSameNode(eventTarget) || sidebarEl?.contains(eventTarget) ||
-                 topbarEl?.isSameNode(eventTarget) || topbarEl?.contains(eventTarget));
+        return !(sidebarEl?.isSameNode(eventTarget) || sidebarEl?.contains(eventTarget) || topbarEl?.isSameNode(eventTarget) || topbarEl?.contains(eventTarget));
     }
 
     hideMenu() {
-        this.layoutService.layoutState.update(prev => ({
+        this.layoutService.layoutState.update((prev) => ({
             ...prev,
             overlayMenuActive: false,
             staticMenuMobileActive: false,

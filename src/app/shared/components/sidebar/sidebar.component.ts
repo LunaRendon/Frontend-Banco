@@ -5,7 +5,7 @@ import { AppMenu } from 'src/app/shared/components/menu/menu.component';
     selector: 'app-sidebar',
     standalone: true,
     imports: [AppMenu],
-    templateUrl: './sidebar.component.html',
+    templateUrl: './sidebar.component.html'
 })
 export class AppSidebar {
     constructor(public el: ElementRef) {}

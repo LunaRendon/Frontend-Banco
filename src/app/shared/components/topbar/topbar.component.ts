@@ -7,18 +7,18 @@ import { LayoutService } from 'src/app/shared/service/layout.service';
 import { AppConfigurator } from '../configurator/app-configurator.component';
 
 @Component({
-  selector: 'app-topbar',
-  templateUrl: './topbar.component.html',
-  styleUrls: ['./_topbar.scss'],
-  standalone: true,
-  imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator]
+    selector: 'app-topbar',
+    templateUrl: './topbar.component.html',
+    styleUrls: ['./_topbar.scss'],
+    standalone: true,
+    imports: [RouterModule, CommonModule, StyleClassModule, AppConfigurator]
 })
 export class AppTopbar {
-  items!: MenuItem[];
+    items!: MenuItem[];
 
-  constructor(public layoutService: LayoutService) {}
+    constructor(public layoutService: LayoutService) {}
 
-  toggleDarkMode() {
-    this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
-  }
+    toggleDarkMode() {
+        this.layoutService.layoutConfig.update((state) => ({ ...state, darkTheme: !state.darkTheme }));
+    }
 }

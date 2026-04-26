@@ -7,21 +7,18 @@ import { AuthService } from 'src/app/core/services/auth.service';
  * Interceptor HTTP que inyecta el token JWT en cada petición al backend.
  * Soluciona el error 401 "Autenticación requerida" en todas las rutas protegidas.
  */
-export const authInterceptor: HttpInterceptorFn = (
-  req: HttpRequest<unknown>,
-  next: HttpHandlerFn
-): Observable<HttpEvent<unknown>> => {
-  const authService = inject(AuthService);
-  const token = authService.getToken();
+export const authInterceptor: HttpInterceptorFn = (req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> => {
+    const authService = inject(AuthService);
+    const token = authService.getToken();
 
-  if (token) {
-    const authReq = req.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-    return next(authReq);
-  }
+    if (token) {
+        const authReq = req.clone({
+            setHeaders: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+        return next(authReq);
+    }
 
-  return next(req);
+    return next(req);
 };

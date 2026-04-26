@@ -11,7 +11,7 @@ import { Usuario } from 'src/app/shared/models/Usuario.model';
 })
 export class PerfilComponent implements OnInit {
     usuario: Usuario | null = null;
-    constructor(private authService: AuthService) { }
+    constructor(private authService: AuthService) {}
 
     ngOnInit() {
         this.usuario = this.authService.getCurrentUser();

@@ -15,22 +15,14 @@ import { provideAnimations } from '@angular/platform-browser/animations';
  * - Sin esto, todas las rutas protegidas devuelven 401 "Autenticación requerida"
  */
 export const appConfig: ApplicationConfig = {
-  
-  providers: [
-    provideAnimations(),
-    provideRouter(
-      appRoutes,
-      withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }),
-      withEnabledBlockingInitialNavigation()
-    ),
-    // CORRECCIÓN: usar withInterceptors en lugar de withInterceptorsFromDi
-    provideHttpClient(
-      withFetch(),
-      withInterceptors([authInterceptor])
-    ),
-    provideAnimationsAsync(),
-    providePrimeNG({
-      theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } }
-    })
-  ]
-}
+    providers: [
+        provideAnimations(),
+        provideRouter(appRoutes, withInMemoryScrolling({ anchorScrolling: 'enabled', scrollPositionRestoration: 'enabled' }), withEnabledBlockingInitialNavigation()),
+        // CORRECCIÓN: usar withInterceptors en lugar de withInterceptorsFromDi
+        provideHttpClient(withFetch(), withInterceptors([authInterceptor])),
+        provideAnimationsAsync(),
+        providePrimeNG({
+            theme: { preset: Aura, options: { darkModeSelector: '.app-dark' } }
+        })
+    ]
+};

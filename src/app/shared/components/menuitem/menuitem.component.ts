@@ -13,13 +13,7 @@ import { LayoutService } from 'src/app/shared/service/layout.service';
     standalone: true,
     imports: [CommonModule, RouterModule, RippleModule],
     templateUrl: './menuitem.component.html',
-    animations: [
-        trigger('children', [
-            state('collapsed', style({ height: '0' })),
-            state('expanded', style({ height: '*' })),
-            transition('collapsed <=> expanded', animate('400ms cubic-bezier(0.86, 0, 0.07, 1)'))
-        ])
-    ],
+    animations: [trigger('children', [state('collapsed', style({ height: '0' })), state('expanded', style({ height: '*' })), transition('collapsed <=> expanded', animate('400ms cubic-bezier(0.86, 0, 0.07, 1)'))])],
     providers: [LayoutService]
 })
 export class AppMenuitem {

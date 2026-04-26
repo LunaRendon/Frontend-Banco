@@ -5,41 +5,34 @@ import { PaginationParams } from '../models/api-response.models';
 import { ApiService } from './api.service';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class BancoService {
-  private readonly endpoint = 'bancos';
+    private readonly endpoint = 'bancos';
 
-  constructor(private apiService: ApiService) { }
+    constructor(private apiService: ApiService) {}
 
-  getBancos(pagination: PaginationParams, filters?: BancoFilters): Observable<Banco[]> {
-    return this.apiService.getPaginated<Banco>(this.endpoint, pagination, filters);
-  }
+    getBancos(pagination: PaginationParams, filters?: BancoFilters): Observable<Banco[]> {
+        return this.apiService.getPaginated<Banco>(this.endpoint, pagination, filters);
+    }
 
+    getBancoById(id: string): Observable<Banco> {
+        return this.apiService.get<Banco>(`${this.endpoint}/${id}`);
+    }
 
-  getBancoById(id: string): Observable<Banco> {
-    return this.apiService.get<Banco>(`${this.endpoint}/${id}`);
-  }
+    createBanco(banco: CreateBancoRequest): Observable<Banco> {
+        return this.apiService.post<Banco>(this.endpoint, banco);
+    }
 
+    updateBanco(id: string, banco: UpdateBancoRequest): Observable<Banco> {
+        return this.apiService.put<Banco>(`${this.endpoint}/${id}`, banco);
+    }
 
-  createBanco(banco: CreateBancoRequest): Observable<Banco> {
-    return this.apiService.post<Banco>(this.endpoint, banco);
-  }
+    deleteBanco(id: string): Observable<any> {
+        return this.apiService.delete<any>(`${this.endpoint}/${id}`);
+    }
 
- 
-  updateBanco(id: string, banco: UpdateBancoRequest): Observable<Banco> {
-    return this.apiService.put<Banco>(`${this.endpoint}/${id}`, banco);
-  }
-
-  
-  deleteBanco(id: string): Observable<any> {
-    return this.apiService.delete<any>(`${this.endpoint}/${id}`);
-  }
-
-  
-  getBancoByNombre(nombre: string): Observable<Banco> {
-    return this.apiService.get<Banco>(`${this.endpoint}/nombre/${nombre}`);
-  }
-
-  
+    getBancoByNombre(nombre: string): Observable<Banco> {
+        return this.apiService.get<Banco>(`${this.endpoint}/nombre/${nombre}`);
+    }
 }
