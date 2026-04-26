@@ -4,10 +4,10 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuditContextService } from '@/core/audit-context.service';
 
 export const auditUserGuard: CanActivateFn = () => {
-  const audit = inject(AuditContextService);
-  const router = inject(Router);
-  if (audit.hasUsuario()) {
-    return true;
-  }
-  return router.createUrlTree(['/login']);
+    const audit = inject(AuditContextService);
+    const router = inject(Router);
+    if (audit.hasUsuario()) {
+        return true;
+    }
+    return router.createUrlTree(['/login']);
 };

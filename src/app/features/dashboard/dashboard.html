@@ -1,31 +1,27 @@
 <!-- Dashboard principal mejorado estéticamente -->
 <div class="dashboard-wrapper">
-
-  <!-- Header del Dashboard -->
-  <div class="dashboard-header">
-    <div>
-      <h1 class="dashboard-title">Panel de Control</h1>
-      <p class="dashboard-subtitle">Resumen del sistema bancario</p>
+    <!-- Header del Dashboard -->
+    <div class="dashboard-header">
+        <div>
+            <h1 class="dashboard-title">Panel de Control</h1>
+            <p class="dashboard-subtitle">Resumen del sistema bancario</p>
+        </div>
+        <div class="dashboard-date">{{ hoy | date:'EEEE, d MMMM yyyy':'':'es' }}</div>
     </div>
-    <div class="dashboard-date">
-       {{ hoy | date:'EEEE, d MMMM yyyy':'':'es' }}
-    </div>
-  </div>
 
-  <!-- Tarjetas de estadísticas -->
-  <section class="section">
-    <app-stats-widget></app-stats-widget>
-  </section>
+    <!-- Tarjetas de estadísticas -->
+    <section class="section">
+        <app-stats-widget></app-stats-widget>
+    </section>
 
-  <!-- Fila de widgets -->
-  <section class="section grid-2">
-    <app-recent-clientes-widget></app-recent-clientes-widget>
-    <app-tipo-cuentas-widget></app-tipo-cuentas-widget>
-  </section>
+    <!-- Fila de widgets -->
+    <section class="section grid-2">
+        <app-recent-clientes-widget></app-recent-clientes-widget>
+        <app-tipo-cuentas-widget></app-tipo-cuentas-widget>
+    </section>
 
-  <!-- Notificaciones -->
-  <section class="section">
-    <app-notifications-widget></app-notifications-widget>
-  </section>
-
+    <!-- Notificaciones -->
+    <section class="section">
+        <app-notifications-widget></app-notifications-widget>
+    </section>
 </div>

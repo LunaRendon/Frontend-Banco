@@ -1,21 +1,21 @@
-<p-toolbar styleClass="mb-6">
+<p-toolbar styleClass="mb-6" *ngIf="authService.isAdmin()">
   <ng-template #start>
     <p-button label="Nuevo" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />
     <p-button label="Eliminar" icon="pi pi-trash" outlined severity="secondary"
       [disabled]="!selectedBancos || !selectedBancos.length"
       (onClick)="deleteSelectedBancos()" />
   </ng-template>
-
 </p-toolbar>
 
 <p-table #dt [value]="bancos()" [(selection)]="selectedBancos" dataKey="id_banco"
   [paginator]="true" [rows]="10" [loading]="loading" [rowHover]="true"
-  [globalFilterFields]="['nombre','nit','direccion','telefono','correo_contacto']" [rowsPerPageOptions]="[10,20,30]"
+  [globalFilterFields]="['nombre','nit','direccion','telefono','correo_contacto']"
+  [rowsPerPageOptions]="[10,20,30]"
   currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} bancos">
 
   <ng-template #caption>
     <div class="flex items-center justify-between">
-      <h5 class="m-0">Gestión de bancos</h5>
+      <h5 class="m-0">Gestión de Bancos</h5>
       <p-iconfield>
         <p-inputicon styleClass="pi pi-search" />
         <input pInputText type="text" (input)="onGlobalFilter($event)" placeholder="Buscar..." />
@@ -25,61 +25,61 @@
 
   <ng-template #header>
     <tr>
-      <th style="width:3rem"><p-tableHeaderCheckbox /></th>
+      <th *ngIf="authService.isAdmin()" style="width:8rem"></th>
       <th pSortableColumn="nombre">Nombre <p-sortIcon field="nombre" /></th>
       <th>NIT</th>
-      <th>Dirección</th> 
-      <th>Telefono</th>
+      <th>Dirección</th>
+      <th>Teléfono</th>
       <th>Correo de contacto</th>
       <th>Fecha de creación</th>
       <th style="width:8rem"></th>
     </tr>
   </ng-template>
 
-  <ng-template #body let-bib>
+  <ng-template #body let-banco>
     <tr>
-      <td><p-tableCheckbox [value]="ban" /></td>
-      <td>{{ ban.nombre }}</td>
-      <td>{{ ban.nit }}</td>
-      <td>{{ ban.direccion }}</td>
-      <td>{{ ban.telefono }}</td>
-      <td>{{ ban.correo_contacto }}</td>
-      <td>{{ bib.fecha_creacion | date:'short' }}</td>
-      <td>
-        <p-button icon="pi pi-pencil" class="mr-2" [outlined]="true" [rounded]="true" (click)="editBanco(ban)" />
-        <p-button icon="pi pi-trash" severity="danger" [outlined]="true" [rounded]="true" (click)="deleteBanco(ban)" />
+      <td><p-tableCheckbox [value]="banco" /></td>
+      <td>{{ banco.nombre }}</td>
+      <td>{{ banco.nit }}</td>
+      <td>{{ banco.direccion }}</td>
+      <td>{{ banco.telefono }}</td>
+      <td>{{ banco.correo_contacto }}</td>
+      <td>{{ banco.fecha_creacion | date:'short' }}</td>
+      <td *ngIf="authService.isAdmin()">
+        <p-button icon="pi pi-pencil" class="mr-2" [outlined]="true" [rounded]="true" (click)="editBanco(banco)" />
+        <p-button icon="pi pi-trash" severity="danger" [outlined]="true" [rounded]="true" (click)="deleteBanco(banco)" />
       </td>
     </tr>
   </ng-template>
 </p-table>
 
-<p-dialog [(visible)]="bancoDialog" [style]="{width: '450px'}" header="Detalles de Bancos" [modal]="true">
+<p-dialog [(visible)]="bancoDialog" [style]="{width: '450px'}" header="Detalles del Banco" [modal]="true">
   <ng-template #content>
     <div class="flex flex-col gap-4">
       <div>
         <label for="nombre" class="block font-bold mb-2">Nombre</label>
-        <input id="nombre" type="text" pInputText [(ngModel)]="biblioteca.nombre" required autofocus fluid />
-        <small class="text-red-500" *ngIf="submitted && !biblioteca.nombre">El nombre es obligatorio.</small>
+        <input id="nombre" type="text" pInputText [(ngModel)]="banco.nombre" required autofocus fluid />
+        <small class="text-red-500" *ngIf="submitted && !banco.nombre">El nombre es obligatorio.</small>
       </div>
       <div>
-        <label for="nit" class="block font-bold mb-2">NIT del banco</label>
-        <input id="nit" type="text" pInputText [(ngModel)]="banco.id_banco" required fluid />
-        <small class="text-gray-400">El NIT del banco es obligatorio.</small>
+        <label for="nit" class="block font-bold mb-2">NIT</label>
+        <input id="nit" type="text" pInputText [(ngModel)]="banco.nit" required fluid />
+        <small class="text-red-500" *ngIf="submitted && !banco.nit">El NIT es obligatorio.</small>
       </div>
       <div>
-        <label for="direccion" class="block font-bold mb-2">Dirección del banco</label>
-        <input id="direccion" type="text" pInputText [(ngModel)]="banco.id_banco" required fluid />
-        <small class="text-gray-400">La direccion del banco es obligatorio.</small>
+        <label for="direccion" class="block font-bold mb-2">Dirección</label>
+        <input id="direccion" type="text" pInputText [(ngModel)]="banco.direccion" required fluid />
+        <small class="text-red-500" *ngIf="submitted && !banco.direccion">La dirección es obligatoria.</small>
       </div>
       <div>
-        <label for="telefono" class="block font-bold mb-2">Teléfono del banco</label>
-        <input id="telefono" type="text" pInputText [(ngModel)]="banco.id_banco" required fluid />
-        <small class="text-gray-400">El teléfono del banco es obligatorio.</small>
+        <label for="telefono" class="block font-bold mb-2">Teléfono</label>
+        <input id="telefono" type="text" pInputText [(ngModel)]="banco.telefono" required fluid />
+        <small class="text-red-500" *ngIf="submitted && !banco.telefono">El teléfono es obligatorio.</small>
       </div>
       <div>
-        <label for="correo_contacto" class="block font-bold mb-2">Correo de contacto del banco</label>
-        <input id="correo_contacto" type="text" pInputText [(ngModel)]="banco.id_banco" required fluid />
-        <small class="text-gray-400">El correo de contacto del banco es obligatorio.</small>
+        <label for="correo_contacto" class="block font-bold mb-2">Correo de contacto</label>
+        <input id="correo_contacto" type="text" pInputText [(ngModel)]="banco.correo_contacto" required fluid />
+        <small class="text-red-500" *ngIf="submitted && !banco.correo_contacto">El correo es obligatorio.</small>
       </div>
     </div>
   </ng-template>
@@ -91,3 +91,4 @@
 </p-dialog>
 
 <p-confirmdialog [style]="{ width: '450px' }" />
+<p-toast />

@@ -10,23 +10,23 @@ import { Dashboard } from 'src/app/features/dashboard/dashboard';
 import { PerfilComponent } from 'src/app/features/perfil/perfil.component';
 
 export const appRoutes: Routes = [
-  {
-    path: 'auth',
-    children: authRoutes,
-    // canActivate: [LoginGuard]
-  },
-  {
-    path: '',
-    component: AppLayout,
-    canActivate: [AuthGuard],
-    children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: Dashboard },
-      { path: 'bancos', component: BancoListComponent },
-      { path: 'perfil', component: PerfilComponent },
-      { path: 'clientes', component: ClienteListComponent },
-      { path: 'usuarios', component: UsuarioListComponent }
-    ]
-  },
-  { path: '**', redirectTo: 'auth/login' }
+    {
+        path: 'auth',
+        children: authRoutes
+        // canActivate: [LoginGuard]
+    },
+    {
+        path: '',
+        component: AppLayout,
+        canActivate: [AuthGuard],
+        children: [
+            { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+            { path: 'dashboard', component: Dashboard },
+            { path: 'bancos', component: BancoListComponent },
+            { path: 'perfil', component: PerfilComponent },
+            { path: 'clientes', component: ClienteListComponent },
+            { path: 'usuarios', component: UsuarioListComponent }
+        ]
+    },
+    { path: '**', redirectTo: 'auth/login' }
 ];

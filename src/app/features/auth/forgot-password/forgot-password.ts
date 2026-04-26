@@ -4,9 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
+import { PasswordModule } from 'primeng/password';
 import { RippleModule } from 'primeng/ripple';
-import { AuthService } from 'src/app/core/services/auth.service';
+import { HttpClient } from '@angular/common/http';
 import { AppFloatingConfigurator } from 'src/app/shared/components/floating-configurator/floating-configurator';
+import { environment } from 'src/environments/enviroment';
 
 @Component({
   selector: 'app-forgot-password',
@@ -17,43 +19,58 @@ import { AppFloatingConfigurator } from 'src/app/shared/components/floating-conf
     RouterModule,
     ButtonModule,
     InputTextModule,
+    PasswordModule,
     RippleModule,
     AppFloatingConfigurator
   ],
   templateUrl: './forgot-password.html'
 })
 export class ForgotPassword {
-  email = '';
+  username = '';
+  nuevaContrasena = '';
+  confirmContrasena = '';
   mensaje = '';
   error = '';
+  cargando = false;
 
-  constructor(private authService: AuthService, private router: Router) {}
-
-  private generarContrasena(): string {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    return Array.from({ length: 8 }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-  }
+  constructor(private http: HttpClient, private router: Router) {}
 
   onSubmit(): void {
     this.error = '';
     this.mensaje = '';
 
-    const users = this.authService.getAllUsers();
-    const user = users.find(u => u.email === this.email);
-
-    if (!user) {
-      this.error = 'No se encontró ningún usuario con ese correo.';
+    if (!this.username || !this.nuevaContrasena || !this.confirmContrasena) {
+      this.error = 'Todos los campos son obligatorios.';
       return;
     }
 
-    const nuevaContrasena = this.generarContrasena();
-    localStorage.setItem(`pwd_${user.nombre_usuario}`, btoa(nuevaContrasena));
+    if (this.nuevaContrasena !== this.confirmContrasena) {
+      this.error = 'Las contraseñas no coinciden.';
+      return;
+    }
 
-    this.mensaje = `Tu nueva contraseña temporal es: ${nuevaContrasena}`;
-    setTimeout(() => this.router.navigate(['/auth/login']), 5000);
-  }
+    this.cargando = true;
 
-  volverALogin() {
-    this.router.navigate(['/auth/login']);
+    this.http.get<any>(`${environment.apiUrl}usuarios_app/username/${this.username}`).subscribe({
+      next: (usuario) => {
+        this.http.put(`${environment.apiUrl}usuarios_app/${usuario.id_usuario}`, {
+          contraseña: this.nuevaContrasena
+        }).subscribe({
+          next: () => {
+            this.mensaje = 'Contraseña actualizada exitosamente. Redirigiendo al login...';
+            this.cargando = false;
+            setTimeout(() => this.router.navigate(['/auth/login']), 2000);
+          },
+          error: () => {
+            this.error = 'Error al actualizar la contraseña.';
+            this.cargando = false;
+          }
+        });
+      },
+      error: () => {
+        this.error = 'No se encontró ningún usuario con ese nombre.';
+        this.cargando = false;
+      }
+    });
   }
 }

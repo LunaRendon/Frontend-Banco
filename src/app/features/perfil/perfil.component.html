@@ -1,61 +1,26 @@
-<div
-  class="flex flex-col items-center justify-center 
-         transition-colors duration-300 overflow-hidden"
->
-  <div
-    class="bg-surface-0 dark:bg-surface-800 shadow-lg rounded-2xl p-8 
-           w-full max-w-md text-center transition-colors duration-300"
-  >
-    <img
-      src="assets/logos/logobanco.jpg"
-      alt="Logo Banco"
-      class="w-24 h-24 mx-auto mb-4 rounded-full shadow-md object-contain"
-    />
+<div class="flex flex-col items-center justify-center transition-colors duration-300 overflow-hidden">
+    <div class="bg-surface-0 dark:bg-surface-800 shadow-lg rounded-2xl p-8 w-full max-w-md text-center transition-colors duration-300">
+        <img src="assets/logos/logobanco.jpg" alt="Logo Banco" class="w-24 h-24 mx-auto mb-4 rounded-full shadow-md object-contain" />
 
-    <h2
-      class="text-2xl font-bold mb-6 
-             text-surface-900 dark:text-surface-0 transition-colors duration-300"
-    >
-      Mi Perfil
-    </h2>
+        <h2 class="text-2xl font-bold mb-6 text-surface-900 dark:text-surface-0 transition-colors duration-300">Mi Perfil</h2>
 
-    <div
-      *ngIf="usuario; else noUser"
-      class="text-left text-surface-700 dark:text-surface-200 
-             space-y-3 transition-colors duration-300"
-    >
-      <div class="flex justify-between">
-        <span class="font-semibold">Nombre:</span>
-        <span>{{ usuario.nombre }}</span>
-      </div>
-      <div class="flex justify-between">
-        <span class="font-semibold">Usuario:</span>
-        <span>{{ usuario.nombre_usuario }}</span>
-      </div>
-      <div class="flex justify-between">
-        <span class="font-semibold">Email:</span>
-        <span>{{ usuario.email }}</span>
-      </div>
-      <div class="flex justify-between">
-        <span class="font-semibold">Teléfono:</span>
-        <span>{{ usuario.telefono }}</span>
-      </div>
-      <div class="flex justify-between">
-        <span class="font-semibold">Rol:</span>
-        <span>{{ usuario.es_admin ? 'Administrador' : 'Consumidor' }}</span>
-      </div>
-      <div class="flex justify-between">
-        <span class="font-semibold">Activo:</span>
-        <span>{{ usuario.activo ? 'Sí' : 'No' }}</span>
-      </div>
-      <div class="flex justify-between">
-        <span class="font-semibold">Creado:</span>
-        <span>{{ usuario.fecha_creacion | date:'short' }}</span>
-      </div>
+        <div *ngIf="usuario; else noUser" class="text-left text-surface-700 dark:text-surface-200 space-y-3 transition-colors duration-300">
+            <div class="flex justify-between">
+                <span class="font-semibold">Usuario:</span>
+                <span>{{ usuario.nombre_usuario }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-semibold">Rol:</span>
+                <span>{{ usuario.rol === 'admin_app' ? 'Administrador' : 'Cliente' }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="font-semibold">Estado:</span>
+                <span>{{ usuario.rol ? 'Activo' : 'Inactivo' }}</span>
+            </div>
+        </div>
+
+        <ng-template #noUser>
+            <p class="text-muted-color">No hay usuario autenticado.</p>
+        </ng-template>
     </div>
-
-    <ng-template #noUser>
-      <p class="text-muted-color">No hay usuario autenticado.</p>
-    </ng-template>
-  </div>
 </div>

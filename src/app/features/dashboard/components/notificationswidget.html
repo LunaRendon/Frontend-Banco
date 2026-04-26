@@ -1,14 +1,9 @@
 <div class="bg-white shadow-2xl rounded-2xl p-5">
+    <h4 class="text-lg font-bold mb-4 text-gray-700">Notificaciones</h4>
 
-  <h4 class="text-lg font-bold mb-4 text-gray-700">Notificaciones</h4>
+    <div *ngFor="let n of notificaciones" class="flex items-center gap-3 p-3 mb-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition">
+        <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
 
-  <div *ngFor="let n of notificaciones"
-       class="flex items-center gap-3 p-3 mb-2 rounded-lg bg-gray-50 hover:bg-gray-100 transition">
-
-    <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
-
-    <p class="text-sm text-gray-700">{{ n }}</p>
-
-  </div>
-
+        <p class="text-sm text-gray-700">{{ n }}</p>
+    </div>
 </div>

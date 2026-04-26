@@ -1,19 +1,12 @@
 <div class="bg-white shadow-2xl rounded-2xl p-5">
+    <h4 class="text-lg font-bold mb-4 text-gray-700">Clientes Recientes</h4>
 
-  <h4 class="text-lg font-bold mb-4 text-gray-700"> Clientes Recientes</h4>
+    <div *ngFor="let c of clientes" class="flex justify-between items-center p-3 rounded-lg hover:bg-gray-100 transition">
+        <div>
+            <p class="font-semibold">{{ c.nombre }}</p>
+            <p class="text-sm text-gray-500">{{ c.tipo_documento }}</p>
+        </div>
 
-  <div *ngFor="let c of clientes"
-       class="flex justify-between items-center p-3 rounded-lg hover:bg-gray-100 transition">
-
-    <div>
-      <p class="font-semibold">{{ c.nombre }}</p>
-      <p class="text-sm text-gray-500">{{ c.tipo_documento }}</p>
+        <span class="bg-green-100 text-green-600 px-2 py-1 text-xs rounded-full"> Activo </span>
     </div>
-
-    <span class="bg-green-100 text-green-600 px-2 py-1 text-xs rounded-full">
-      Activo
-    </span>
-
-  </div>
-
 </div>

@@ -1,20 +1,14 @@
 <div class="bg-white shadow-2xl rounded-2xl p-5">
+    <h4 class="text-lg font-bold mb-4 text-gray-700">Tipos de Cuenta</h4>
 
-  <h4 class="text-lg font-bold mb-4 text-gray-700">Tipos de Cuenta</h4>
+    <div *ngFor="let t of tipos" class="mb-4">
+        <div class="flex justify-between text-sm mb-1">
+            <span>{{ t.nombre }}</span>
+            <span class="font-semibold">{{ t.cantidad }}</span>
+        </div>
 
-  <div *ngFor="let t of tipos" class="mb-4">
-
-    <div class="flex justify-between text-sm mb-1">
-      <span>{{ t.nombre }}</span>
-      <span class="font-semibold">{{ t.cantidad }}</span>
+        <div class="w-full bg-gray-200 rounded-full h-3">
+            <div class="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full" [style.width.%]="t.cantidad * 10"></div>
+        </div>
     </div>
-
-    <div class="w-full bg-gray-200 rounded-full h-3">
-      <div class="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full"
-           [style.width.%]="t.cantidad * 10">
-      </div>
-    </div>
-
-  </div>
-
 </div>
