@@ -152,23 +152,37 @@ export class RecentClientesWidget implements OnInit {
     }
 
     cargarClientes() {
-        this.bancoService.getBancos({ page: 1, limit: 1 }).subscribe({
+        this.bancoService.getBancos({ page: 1, limit: 100 }).subscribe({
             next: (bancos: any[]) => {
-                if (bancos && bancos.length > 0) {
-                    const id_banco = bancos[0].id_banco || bancos[0].id;
-                    this.clienteService.getClientes(id_banco, { page: 1, limit: 5 }).subscribe({
+                if (!bancos || bancos.length === 0) {
+                    this.loading = false;
+                    return;
+                }
+
+                const todasLasPeticiones = bancos.map((banco) => this.clienteService.getClientes(banco.id_banco, { page: 1, limit: 100 }));
+
+                let todosClientes: any[] = [];
+                let completadas = 0;
+
+                todasLasPeticiones.forEach((peticion) => {
+                    peticion.subscribe({
                         next: (clientes: any[]) => {
-                            // Mostrar solo los últimos 5
-                            this.clientes = (clientes || []).slice(-5).reverse();
-                            this.loading = false;
+                            todosClientes = [...todosClientes, ...(clientes || [])];
+                            completadas++;
+                            if (completadas === todasLasPeticiones.length) {
+                                this.clientes = todosClientes.slice(-5).reverse();
+                                this.loading = false;
+                            }
                         },
                         error: () => {
-                            this.loading = false;
+                            completadas++;
+                            if (completadas === todasLasPeticiones.length) {
+                                this.clientes = todosClientes.slice(-5).reverse();
+                                this.loading = false;
+                            }
                         }
                     });
-                } else {
-                    this.loading = false;
-                }
+                });
             },
             error: () => {
                 this.loading = false;

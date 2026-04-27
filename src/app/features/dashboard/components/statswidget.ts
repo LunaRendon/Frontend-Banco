@@ -133,22 +133,42 @@ export class StatsWidget implements OnInit {
     }
 
     cargarBancosYDatos() {
-        // Primero obtenemos la lista de bancos para usar el primer ID real
-        this.bancoService.getBancos({ page: 1, limit: 1 }).subscribe({
+        this.bancoService.getBancos({ page: 1, limit: 100 }).subscribe({
             next: (bancos: any[]) => {
-                if (bancos && bancos.length > 0) {
-                    this.id_banco = bancos[0].id_banco || bancos[0].id;
-                    this.cargarClientes();
-                } else {
+                if (!bancos || bancos.length === 0) {
                     this.loadingClientes = false;
                     this.errorMsg = 'No hay bancos registrados en el sistema';
+                    return;
                 }
+
+                let todosClientes: any[] = [];
+                let completadas = 0;
+
+                bancos.forEach((banco) => {
+                    this.clienteService.getClientes(banco.id_banco, { page: 1, limit: 100 }).subscribe({
+                        next: (clientes: any[]) => {
+                            todosClientes = [...todosClientes, ...(clientes || [])];
+                            completadas++;
+                            if (completadas === bancos.length) {
+                                this.totalClientes = todosClientes.length;
+                                this.clientesActivos = todosClientes.filter((c) => c.correo && c.correo !== '').length;
+                                this.loadingClientes = false;
+                            }
+                        },
+                        error: () => {
+                            completadas++;
+                            if (completadas === bancos.length) {
+                                this.totalClientes = todosClientes.length;
+                                this.clientesActivos = todosClientes.filter((c) => c.correo && c.correo !== '').length;
+                                this.loadingClientes = false;
+                            }
+                        }
+                    });
+                });
             },
             error: (err) => {
                 this.loadingClientes = false;
-                if (err.status === 401) {
-                    this.errorMsg = 'Sin autenticación. Inicia sesión de nuevo.';
-                } else if (err.status === 0) {
+                if (err.status === 0) {
                     this.errorMsg = 'Backend no disponible en http://127.0.0.1:8000';
                 } else {
                     this.errorMsg = 'Error al conectar con el backend';
@@ -157,21 +177,6 @@ export class StatsWidget implements OnInit {
         });
 
         this.cargarCuentas();
-    }
-
-    cargarClientes() {
-        if (!this.id_banco) return;
-        this.loadingClientes = true;
-        this.clienteService.getClientes(this.id_banco, { page: 1, limit: 100 }).subscribe({
-            next: (clientes: any[]) => {
-                this.totalClientes = clientes?.length || 0;
-                this.clientesActivos = clientes?.filter((c) => c.correo && c.correo !== '').length || 0;
-                this.loadingClientes = false;
-            },
-            error: () => {
-                this.loadingClientes = false;
-            }
-        });
     }
 
     cargarCuentas() {
