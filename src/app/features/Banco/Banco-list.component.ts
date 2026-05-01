@@ -36,9 +36,8 @@ export class BancoListComponent implements OnInit {
     constructor(
         private bancoService: BancoService,
         private messageService: MessageService,
-        private confirmationService: ConfirmationService,   
-        public authService: AuthService  
-
+        private confirmationService: ConfirmationService,
+        public authService: AuthService
     ) {}
 
     ngOnInit() {

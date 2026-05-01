@@ -6,7 +6,7 @@
     </ng-template>
 </p-toolbar>
 
-<p>Tabla cargando...</p>
+<p *ngIf="loading">Tabla cargando...</p>
 <p-table
     #dt
     [value]="clientes"
@@ -40,6 +40,10 @@
             <th pSortableColumn="tipo_documento">Tipo de Documento <p-sortIcon field="tipo_documento"></p-sortIcon></th>
             <th pSortableColumn="telefono">Teléfono <p-sortIcon field="telefono"></p-sortIcon></th>
             <th pSortableColumn="direccion">Dirección <p-sortIcon field="direccion"></p-sortIcon></th>
+            <th pSortableColumn="correo">Correo <p-sortIcon field="correo"></p-sortIcon></th>
+            <th pSortableColumn="id_cliente">ID Cliente <p-sortIcon field="id_cliente"></p-sortIcon></th>
+            <th pSortableColumn="fecha_creacion">Fecha Creación <p-sortIcon field="fecha_creacion"></p-sortIcon></th>
+            <th style="width: 8rem"></th>
         </tr>
     </ng-template>
 
@@ -55,6 +59,7 @@
             <td>{{ cliente.correo }}</td>
             <td>{{ cliente.id_cliente }}</td>
             <td>{{ cliente.fecha_creacion | date: 'short' }}</td>
+            <td><p-button icon="pi pi-pencil" class="mr-2" [outlined]="true" [rounded]="true" (click)="editCliente(cliente)" /> <p-button icon="pi pi-trash" severity="danger" [outlined]="true" [rounded]="true" (click)="deleteCliente(cliente)" /></td>
         </tr>
     </ng-template>
 </p-table>

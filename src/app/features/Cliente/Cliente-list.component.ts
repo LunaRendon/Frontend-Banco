@@ -12,6 +12,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { RippleModule } from 'primeng/ripple';
 import { Table, TableModule } from 'primeng/table';
 import { ToastModule } from 'primeng/toast';
+import { BancoService } from 'src/app/core/services/Banco.service';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ClienteService } from 'src/app/core/services/Cliente.service';
 import { Cliente, CreateClienteRequest, UpdateClienteRequest } from 'src/app/shared/models/Cliente.model';
@@ -28,17 +29,30 @@ export class ClienteListComponent implements OnInit {
 
     clientes: Cliente[] = [];
     selectedClientes: Cliente[] = [];
-    cliente!: Cliente;
+    cliente: Cliente = {
+        codigo: '',
+        nombre: '',
+        id: '',
+        num_documento: '',
+        tipo_documento: '',
+        telefono: '',
+        direccion: '',
+        correo: '',
+        id_banco: '',
+        fecha_creacion: new Date().toISOString()
+    };
     clienteDialog: boolean = false;
     submitted: boolean = false;
     loading: boolean = false;
 
-    id_banco = '6e59bf3d-fd8f-4494-bff0-c23b7b13f1b3';
+    bancos: any[] = [];
+    id_banco = '';
 
     constructor(
         private clienteService: ClienteService,
         private messageService: MessageService,
-        private confirmationService: ConfirmationService
+        private confirmationService: ConfirmationService,
+        private bancoService: BancoService
     ) {}
 
     ngOnInit() {
@@ -47,14 +61,43 @@ export class ClienteListComponent implements OnInit {
 
     loadClientes() {
         this.loading = true;
-        this.clienteService.getClientes(this.id_banco, { page: 1, limit: 100 }).subscribe({
-            next: (data) => {
-                console.log(' CLIENTES REALES:', data);
-                this.clientes = data;
-                this.loading = false;
+        this.bancoService.getBancos({ page: 1, limit: 100 }).subscribe({
+            next: (bancos: any[]) => {
+                this.bancos = bancos || [];
+                if (this.bancos.length > 0) {
+                    this.id_banco = this.bancos[0].id_banco;
+                }
+                const peticiones = this.bancos.map((banco) => this.clienteService.getClientes(banco.id_banco, { page: 1, limit: 100 }));
+
+                let todosClientes: any[] = [];
+                let completadas = 0;
+
+                if (peticiones.length === 0) {
+                    this.loading = false;
+                    return;
+                }
+
+                peticiones.forEach((peticion) => {
+                    peticion.subscribe({
+                        next: (clientes: any[]) => {
+                            todosClientes = [...todosClientes, ...(clientes || [])];
+                            completadas++;
+                            if (completadas === peticiones.length) {
+                                this.clientes = todosClientes;
+                                this.loading = false;
+                            }
+                        },
+                        error: () => {
+                            completadas++;
+                            if (completadas === peticiones.length) {
+                                this.clientes = todosClientes;
+                                this.loading = false;
+                            }
+                        }
+                    });
+                });
             },
-            error: (err) => {
-                console.error(' ERROR:', err);
+            error: () => {
                 this.loading = false;
             }
         });
