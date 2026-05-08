@@ -20,7 +20,7 @@ export class Register {
     username = '';
     contrasena = '';
     confirmContrasena = '';
-    id_cuenta = '';
+    id_cliente = '';
     mensaje = '';
     error = '';
     cargando = false;
@@ -34,7 +34,7 @@ export class Register {
         this.error = '';
         this.mensaje = '';
 
-        if (!this.username || !this.contrasena || !this.id_cuenta) {
+        if (!this.username || !this.contrasena || !this.id_cliente) {
             this.error = 'Todos los campos son obligatorios.';
             return;
         }
@@ -52,7 +52,7 @@ export class Register {
                 contraseña: this.contrasena,
                 estado: true,
                 rol: 'cliente',
-                id_cuenta: this.id_cuenta
+                id_cliente: this.id_cliente
             })
             .subscribe({
                 next: () => {
