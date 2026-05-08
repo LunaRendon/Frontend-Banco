@@ -2,79 +2,40 @@
  * Modelo para la entidad Cuenta
  */
 export interface Cuenta {
-    id: string;
-    nombre: string;
-    tipo: string;
+    id_cuenta: string;
+    numero_cuenta: string;
+    tipo_cuenta: string;
     saldo: number;
+    fecha_apertura: string;
+    estado: boolean;
+    id_cliente: string;
     fecha_creacion: string;
     fecha_edicion?: string;
+    cliente?: { id_cliente: string; nombre: string };
+    banco?: { id_banco: string; nombre: string };
 }
 
-/**
- * Modelo para crear una nueva cuenta
- */
 export interface CreateCuentaRequest {
-    nombre: string;
-    tipo: string;
+    numero_cuenta: string;
+    tipo_cuenta: string;
     saldo: number;
+    fecha_apertura: string;
+    estado: boolean;
+    id_cliente: string;
 }
 
-/**
- * Modelo para actualizar una cuenta
- */
 export interface UpdateCuentaRequest {
-    nombre?: string;
-    tipo?: string;
+    numero_cuenta?: string;
+    tipo_cuenta?: string;
     saldo?: number;
+    estado?: boolean;
 }
 
-/**
- * Modelo para filtros de cuenta
- */
 export interface CuentaFilters {
-    nombre?: string;
-    tipo?: string;
+    tipo_cuenta?: string;
+    estado?: boolean;
 }
 
-/**
- * Modelo para respuesta paginada de cuentas
- */
-export interface CuentaListResponse {
-    data: Cuenta[];
-    totalPages: number;
-    currentPage: number;
-    totalItems: number;
-}
-
-/** * Modelo para crear una nueva cuenta
-
- */
-export interface CreateCuentaRequest {
-    nombre: string;
-    tipo: string;
-    saldo: number;
-}
-
-/**
- * Modelo para actualizar una cuenta
- */
-export interface UpdateCuentaRequest {
-    nombre?: string;
-    tipo?: string;
-    saldo?: number;
-}
-
-/**
- * Modelo para filtros de cuenta
- */
-export interface CuentaFilters {
-    nombre?: string;
-    tipo?: string;
-}
-
-/**
- * Modelo para respuesta paginada de cuentas
- */
 export interface CuentaListResponse {
     data: Cuenta[];
     totalPages: number;

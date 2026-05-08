@@ -1,0 +1,103 @@
+<p-toolbar styleClass="mb-6" *ngIf="authService.isAdmin()">
+  <ng-template #start>
+    <p-button label="Nuevo" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />
+    <p-button label="Eliminar" icon="pi pi-trash" outlined severity="secondary"
+      [disabled]="!selectedCuentas || !selectedCuentas.length"
+      (onClick)="deleteSelectedCuentas()" />
+  </ng-template>
+</p-toolbar>
+
+<p-table #dt [value]="cuentas()" [(selection)]="selectedCuentas" dataKey="id_cuenta"
+  [paginator]="true" [rows]="10" [loading]="loading" [rowHover]="true"
+  [globalFilterFields]="['numero_cuenta','tipo_cuenta','id_cliente']"
+  [rowsPerPageOptions]="[10,20,30]">
+
+  <ng-template #caption>
+    <div class="flex items-center justify-between">
+      <h5 class="m-0">Gestión de Cuentas</h5>
+      <p-iconfield>
+        <p-inputicon styleClass="pi pi-search" />
+        <input pInputText type="text" (input)="onGlobalFilter($event)" placeholder="Buscar..." />
+      </p-iconfield>
+    </div>
+  </ng-template>
+
+  <ng-template #header>
+    <tr>
+      <th style="width:3rem"><p-tableHeaderCheckbox /></th>
+      <th pSortableColumn="numero_cuenta">Número de Cuenta <p-sortIcon field="numero_cuenta" /></th>
+      <th pSortableColumn="tipo_cuenta">Tipo <p-sortIcon field="tipo_cuenta" /></th>
+      <th pSortableColumn="saldo">Saldo <p-sortIcon field="saldo" /></th>
+      <th>Cliente</th>
+      <th pSortableColumn="estado">Estado <p-sortIcon field="estado" /></th>
+      <th pSortableColumn="fecha_apertura">Fecha Apertura <p-sortIcon field="fecha_apertura" /></th>
+      <th *ngIf="authService.isAdmin()" style="width:8rem"></th>
+    </tr>
+  </ng-template>
+
+  <ng-template #body let-cuenta>
+    <tr>
+      <td><p-tableCheckbox [value]="cuenta" /></td>
+      <td>{{ cuenta.numero_cuenta }}</td>
+      <td>{{ cuenta.tipo_cuenta }}</td>
+      <td>{{ cuenta.saldo | currency:'COP':'symbol':'1.0-0' }}</td>
+      <td>{{ cuenta.cliente?.nombre || cuenta.id_cliente }}</td>
+      <td>
+        <span [class]="cuenta.estado ? 'text-green-500 font-bold' : 'text-red-500 font-bold'">
+          {{ cuenta.estado ? 'Activa' : 'Inactiva' }}
+        </span>
+      </td>
+      <td>{{ cuenta.fecha_apertura | date:'shortDate' }}</td>
+      <td *ngIf="authService.isAdmin()">
+        <p-button icon="pi pi-pencil" class="mr-2" [outlined]="true" [rounded]="true" (click)="editCuenta(cuenta)" />
+        <p-button icon="pi pi-trash" severity="danger" [outlined]="true" [rounded]="true" (click)="deleteCuenta(cuenta)" />
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="cuentaDialog" [style]="{width: '500px'}" header="Detalles de la Cuenta" [modal]="true">
+  <ng-template #content>
+    <div class="flex flex-col gap-4">
+      <div>
+        <label class="block font-bold mb-2">Número de Cuenta</label>
+        <input type="text" pInputText [(ngModel)]="cuenta.numero_cuenta" required fluid />
+        <small class="text-red-500" *ngIf="submitted && !cuenta.numero_cuenta">Obligatorio.</small>
+      </div>
+      <div>
+        <label class="block font-bold mb-2">Tipo de Cuenta</label>
+        <select [(ngModel)]="cuenta.tipo_cuenta" class="w-full p-2 border rounded">
+          <option value="ahorros">Ahorros</option>
+          <option value="corriente">Corriente</option>
+        </select>
+      </div>
+      <div>
+        <label class="block font-bold mb-2">Saldo Inicial</label>
+        <input type="number" pInputText [(ngModel)]="cuenta.saldo" required fluid />
+      </div>
+      <div>
+        <label class="block font-bold mb-2">Cliente</label>
+        <select [(ngModel)]="cuenta.id_cliente" class="w-full p-2 border rounded">
+          <option value="">Selecciona un cliente</option>
+          <option *ngFor="let c of clientes" [value]="c.id_cliente">{{ c.nombre }}</option>
+        </select>
+        <small class="text-red-500" *ngIf="submitted && !cuenta.id_cliente">Obligatorio.</small>
+      </div>
+      <div>
+        <label class="block font-bold mb-2">Fecha de Apertura</label>
+        <input type="date" pInputText [(ngModel)]="cuenta.fecha_apertura" fluid />
+      </div>
+      <div class="flex items-center gap-2">
+        <label class="font-bold">Estado Activo</label>
+        <input type="checkbox" [(ngModel)]="cuenta.estado" />
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <p-button label="Cancelar" icon="pi pi-times" text (click)="hideDialog()" />
+    <p-button label="Guardar" icon="pi pi-check" (click)="saveCuenta()" />
+  </ng-template>
+</p-dialog>
+
+<p-confirmdialog [style]="{ width: '450px' }" />
+<p-toast />
