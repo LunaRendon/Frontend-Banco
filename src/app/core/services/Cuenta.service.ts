@@ -1,38 +1,36 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Cuenta, CuentaFilters, CreateCuentaRequest, UpdateCuentaRequest } from '../../shared/models/Cuenta.model';
-import { PaginationParams } from '../models/api-response.models';
+import { Cuenta, CreateCuentaRequest, UpdateCuentaRequest } from '../../shared/models/Cuenta.model';
 import { ApiService } from './api.service';
+import { environment } from 'src/environments/enviroment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class CuentaService {
     private readonly endpoint = 'cuentas';
-    private apiUrl = 'http://127.0.0.1:8000/docs#/cuentas';
-    constructor(private apiService: ApiService) {}
+    private apiUrl = environment.apiUrl;
 
-    getCuentas(pagination: PaginationParams, filters?: CuentaFilters): Observable<Cuenta[]> {
-        return this.apiService.getPaginated<Cuenta>(this.endpoint, pagination, filters);
+    constructor(private apiService: ApiService, private http: HttpClient) {}
+
+    getCuentasByCliente(id_cliente: string): Observable<Cuenta[]> {
+        return this.http.get<Cuenta[]>(`${this.apiUrl}${this.endpoint}/${id_cliente}`);
     }
 
-    getCuentaById(id: string): Observable<Cuenta> {
-        return this.apiService.get<Cuenta>(`${this.endpoint}/${id}`);
+    getCuentaById(id_cliente: string, id_cuenta: string): Observable<Cuenta> {
+        return this.http.get<Cuenta>(`${this.apiUrl}${this.endpoint}/${id_cliente}/cuenta/${id_cuenta}`);
     }
 
     createCuenta(cuenta: CreateCuentaRequest): Observable<Cuenta> {
         return this.apiService.post<Cuenta>(this.endpoint, cuenta);
     }
 
-    updateCuenta(id: string, cuenta: UpdateCuentaRequest): Observable<Cuenta> {
-        return this.apiService.put<Cuenta>(`${this.endpoint}/${id}`, cuenta);
+    updateCuenta(id_cliente: string, id_cuenta: string, cuenta: UpdateCuentaRequest): Observable<Cuenta> {
+        return this.http.put<Cuenta>(`${this.apiUrl}${this.endpoint}/${id_cliente}/Cuenta/${id_cuenta}`, cuenta);
     }
 
-    deleteCuenta(id: string): Observable<any> {
-        return this.apiService.delete<any>(`${this.endpoint}/${id}`);
-    }
-
-    getCuentaByNombre(nombre: string): Observable<Cuenta> {
-        return this.apiService.get<Cuenta>(`${this.endpoint}/nombre/${nombre}`);
+    deleteCuenta(id_cliente: string, id_cuenta: string): Observable<any> {
+        return this.http.delete<any>(`${this.apiUrl}${this.endpoint}/${id_cliente}/Cuenta/${id_cuenta}`);
     }
 }

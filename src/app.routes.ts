@@ -5,6 +5,7 @@ import { authRoutes } from 'src/app/features/auth/auth.routes';
 import { BancoListComponent } from 'src/app/features/Banco/Banco-list.component';
 import { LoginGuard } from 'src/app/core/guards/login.guard';
 import { ClienteListComponent } from 'src/app/features/Cliente/Cliente-list.component';
+import { CuentaListComponent } from 'src/app/features/Cuenta/Cuenta-list.component';
 import { UsuarioListComponent } from 'src/app/features/Usuario/Usuario-lis.component';
 import { PrestamosListComponent } from 'src/app/features/Prestamos/Prestamos-list-components';
 import { Dashboard } from 'src/app/features/dashboard/dashboard';
@@ -27,6 +28,7 @@ export const appRoutes: Routes = [
             { path: 'bancos', component: BancoListComponent },
             { path: 'perfil', component: PerfilComponent },
             { path: 'clientes', component: ClienteListComponent },
+            { path: 'cuentas', component: CuentaListComponent },
             { path: 'usuarios', component: UsuarioListComponent },
             { path: 'prestamos', component: PrestamosListComponent }
         ]

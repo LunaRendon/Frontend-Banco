@@ -180,15 +180,66 @@ export class StatsWidget implements OnInit {
     }
 
     cargarCuentas() {
-        this.loadingCuentas = true;
-        this.cuentaService.getCuentas({ page: 1, limit: 1000 }, {}).subscribe({
-            next: (cuentas: any[]) => {
-                this.cuentasTotales = cuentas?.length || 0;
-                this.loadingCuentas = false;
-            },
-            error: () => {
-                this.loadingCuentas = false;
-            }
-        });
-    }
+    this.loadingCuentas = true;
+    this.bancoService.getBancos({ page: 1, limit: 100 }).subscribe({
+        next: (bancos: any[]) => {
+            let todasCuentas: any[] = [];
+            let completadas = 0;
+            if (!bancos || bancos.length === 0) { this.loadingCuentas = false; return; }
+
+            bancos.forEach(banco => {
+                this.clienteService.getClientes(banco.id_banco, { page: 1, limit: 100 }).subscribe({
+                    next: (clientes: any[]) => {
+                        let subCompletadas = 0;
+                        if (!clientes || clientes.length === 0) {
+                            completadas++;
+                            if (completadas === bancos.length) {
+                                const unique = Array.from(new Map(todasCuentas.map(c => [c.id_cuenta, c])).values());
+                                this.cuentasTotales = unique.length;
+                                this.loadingCuentas = false;
+                            }
+                            return;
+                        }
+                        clientes.forEach((c: any) => {
+                            this.cuentaService.getCuentasByCliente(c.id_cliente).subscribe({
+                                next: (cuentas: any[]) => {
+                                    todasCuentas = [...todasCuentas, ...(cuentas || [])];
+                                    subCompletadas++;
+                                    if (subCompletadas === clientes.length) {
+                                        completadas++;
+                                        if (completadas === bancos.length) {
+                                            const unique = Array.from(new Map(todasCuentas.map(c => [c.id_cuenta, c])).values());
+                                            this.cuentasTotales = unique.length;
+                                            this.loadingCuentas = false;
+                                        }
+                                    }
+                                },
+                                error: () => {
+                                    subCompletadas++;
+                                    if (subCompletadas === clientes.length) {
+                                        completadas++;
+                                        if (completadas === bancos.length) {
+                                            const unique = Array.from(new Map(todasCuentas.map(c => [c.id_cuenta, c])).values());
+                                            this.cuentasTotales = unique.length;
+                                            this.loadingCuentas = false;
+                                        }
+                                    }
+                                }
+                            });
+                        });
+                    },
+                    error: () => {
+                        completadas++;
+                        if (completadas === bancos.length) {
+                            const unique = Array.from(new Map(todasCuentas.map(c => [c.id_cuenta, c])).values());
+                            this.cuentasTotales = unique.length;
+                            this.loadingCuentas = false;
+                        }
+                    }
+                });
+            });
+        },
+        error: () => { this.loadingCuentas = false; }
+    });
+}
 }
