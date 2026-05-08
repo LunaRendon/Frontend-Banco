@@ -49,20 +49,21 @@ export class PrestamoService {
     }
 
     updatePrestamo(
+        id_cliente: string,
         id_prestamo: string,
         prestamo: UpdatePrestamoRequest
     ): Observable<Prestamo> {
 
         return this.apiService.put<Prestamo>(
-            `${this.endpoint}/${id_prestamo}`,
+            `${this.endpoint}${id_cliente}/${id_prestamo}`,
             prestamo
         );
     }
 
-    deletePrestamo(id_prestamo: string): Observable<any> {
+    deletePrestamo(id_prestamo: string, id_cliente: string): Observable<any> {
 
         return this.apiService.delete<any>(
-            `${this.endpoint}/${id_prestamo}`
+            `${this.endpoint}${id_cliente}/${id_prestamo}`
         );
     }
 
