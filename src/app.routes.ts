@@ -6,8 +6,10 @@ import { BancoListComponent } from 'src/app/features/Banco/Banco-list.component'
 import { LoginGuard } from 'src/app/core/guards/login.guard';
 import { ClienteListComponent } from 'src/app/features/Cliente/Cliente-list.component';
 import { UsuarioListComponent } from 'src/app/features/Usuario/Usuario-lis.component';
+import { PrestamosListComponent } from 'src/app/features/Prestamos/Prestamos-list-components';
 import { Dashboard } from 'src/app/features/dashboard/dashboard';
 import { PerfilComponent } from 'src/app/features/perfil/perfil.component';
+
 
 export const appRoutes: Routes = [
     {
@@ -25,7 +27,8 @@ export const appRoutes: Routes = [
             { path: 'bancos', component: BancoListComponent },
             { path: 'perfil', component: PerfilComponent },
             { path: 'clientes', component: ClienteListComponent },
-            { path: 'usuarios', component: UsuarioListComponent }
+            { path: 'usuarios', component: UsuarioListComponent },
+            { path: 'prestamos', component: PrestamosListComponent }
         ]
     },
     { path: '**', redirectTo: 'auth/login' }
