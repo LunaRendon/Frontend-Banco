@@ -10,13 +10,12 @@ import {
 
 import { PaginationParams } from '../models/api-response.models';
 import { ApiService } from './api.service';
-
 @Injectable({
     providedIn: 'root'
 })
 export class PrestamoService {
 
-    private readonly endpoint = 'prestamos';
+    private readonly endpoint = 'prestamos/';
 
     constructor(private apiService: ApiService) { }
 

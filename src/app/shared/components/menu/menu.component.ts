@@ -36,7 +36,7 @@ export class AppMenu {
                     ...(isAdmin ? [{ label: 'Cuentas', icon: 'pi pi-fw pi-address-book', routerLink: ['/cuentas'] }] : []),
                     { label: 'Tarjetas ', icon: 'pi pi-fw pi-credit-card', routerLink: ['/tarjetas'] },
                     ...(isAdmin ? [{ label: 'Operaciones', icon: 'pi pi-fw pi-calculator', routerLink: ['/operaciones'] }] : []),
-                    ...(isAdmin ? [{ label: 'Préstamos', icon: 'pi pi-fw pi-money-bill', routerLink: ['/prestamos'] }] : []),
+                    { label: 'Préstamos', icon: 'pi pi-fw pi pi-fw pi-money-bill', routerLink: ['/prestamos'] },
                     ...(isAdmin ? [{ label: 'Usuarios de la aplicación', icon: 'pi pi-fw pi-mobile', routerLink: ['/usuarios-aplicacion'] }] : []),
                     ...(isAdmin ? [{ label: 'Usuarios', icon: 'pi pi-fw pi-user', routerLink: ['/usuarios'] }] : [])
                 ]
