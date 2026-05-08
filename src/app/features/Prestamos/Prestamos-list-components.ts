@@ -119,7 +119,7 @@ export class PrestamosListComponent implements OnInit {
             icon: 'pi pi-exclamation-triangle',
 
             accept: () => {
-                this.prestamoService.deletePrestamo(prestamo.id_prestamo).subscribe({
+                this.prestamoService.deletePrestamo(prestamo.id_prestamo, prestamo.id_cliente).subscribe({
                     next: () => {
                         this.prestamos = this.prestamos.filter(
                             (p) => p.id_prestamo !== prestamo.id_prestamo
@@ -157,7 +157,7 @@ export class PrestamosListComponent implements OnInit {
             };
 
             this.prestamoService
-                .updatePrestamo(this.prestamo.id_prestamo, updateReq)
+                .updatePrestamo(this.prestamo.id_cliente, this.prestamo.id_prestamo, updateReq)
                 .subscribe({
                     next: () => {
                         this.messageService.add({
