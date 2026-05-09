@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-
 import { ConfirmationService, MessageService } from 'primeng/api';
-
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule } from 'primeng/dialog';
@@ -15,16 +14,18 @@ import { Table, TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
 import { ToolbarModule } from 'primeng/toolbar';
-
 import { AuthService } from 'src/app/core/services/auth.service';
-
 import { TarjetaService } from 'src/app/core/services/Tarjeta.service';
-
 import {
     Tarjeta,
     CreateTarjetaRequest,
     UpdateTarjetaRequest
 } from 'src/app/shared/models/Tarjeta.model';
+=======
+import { AuthService } from 'src/app/core/services/auth.service';
+import { TarjetaService } from 'src/app/core/services/Tarjeta.service';
+import {Tarjeta,CreateTarjetaRequest,UpdateTarjetaRequest} from 'src/app/shared/models/Tarjeta.model';
+
 
 @Component({
     selector: 'app-tarjeta-crud',
@@ -42,7 +43,9 @@ import {
         ToastModule,
         IconFieldModule,
         InputIconModule,
-        TagModule
+        TagModule,
+        TagModule,
+
     ],
     templateUrl: './Tarjeta-list.component.html',
     providers: [MessageService, ConfirmationService]
@@ -222,6 +225,9 @@ export class TarjetaListComponent implements OnInit {
 
     saveTarjeta() {
 
+        console.log(this.tarjeta.tipo_tarjeta);
+        console.log(this.tarjeta);
+
         this.submitted = true;
 
         if (!this.tarjeta.numero_tarjeta?.trim()) return;
@@ -242,7 +248,13 @@ export class TarjetaListComponent implements OnInit {
 
                 fecha_vencimiento: this.tarjeta.fecha_vencimiento,
 
+
                 cvv: this.tarjeta.cvv,
+
+                ...(this.tarjeta.cvv?.trim()
+                ? { cvv: this.tarjeta.cvv }
+                : {}),
+
 
                 estado: this.tarjeta.estado,
 
@@ -268,8 +280,24 @@ export class TarjetaListComponent implements OnInit {
                         this.loadTarjetas();
 
                         this.tarjetaDialog = false;
+
                     }
                 });
+
+                    },
+
+                    error: (err) => {
+
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail:
+                                err.error?.error?.message ||
+                                'Error al actualizar tarjeta ID cuenta no existe'
+                        });
+                    }
+            });
+
 
         } else {
 
@@ -303,6 +331,20 @@ export class TarjetaListComponent implements OnInit {
                         this.loadTarjetas();
 
                         this.tarjetaDialog = false;
+
+
+                    },
+
+                    error: (err) => {
+
+                        this.messageService.add({
+                            severity: 'error',
+                            summary: 'Error',
+                            detail:
+                                err.error?.error?.message ||
+                                'Error al crear tarjeta ID cuenta no existe'
+                        });
+
                     }
                 });
         }

@@ -7,12 +7,14 @@ import { LoginGuard } from 'src/app/core/guards/login.guard';
 import { ClienteListComponent } from 'src/app/features/Cliente/Cliente-list.component';
 import { CuentaListComponent } from 'src/app/features/Cuenta/Cuenta-list.component';
 import { UsuarioAppListComponent } from 'src/app/features/Usuario_App/UsuarioApp-list.component';
+import { TarjetaListComponent } from 'src/app/features/Tarjeta/Tarjeta-list.component';
 import { UsuarioListComponent } from 'src/app/features/Usuario/Usuario-lis.component';
 import { OperacionListComponent } from 'src/app/features/Operacion/Operacion-list.component';
 import { PrestamosListComponent } from 'src/app/features/Prestamos/Prestamos-list-components';
 import { Dashboard } from 'src/app/features/dashboard/dashboard';
 import { PerfilComponent } from 'src/app/features/perfil/perfil.component';
 import { TarjetaListComponent } from 'src/app/features/Tarjeta/Tarjeta-list.component';
+
 
 
 export const appRoutes: Routes = [
@@ -34,6 +36,7 @@ export const appRoutes: Routes = [
             { path: 'usuarios', component: UsuarioListComponent },
             { path: 'tarjetas', component: TarjetaListComponent }
             { path: 'cuentas', component: CuentaListComponent },
+            { path: 'tarjetas', component: TarjetaListComponent },
             { path: 'usuarios', component: UsuarioListComponent },
             { path: 'operaciones', component: OperacionListComponent },
             { path: 'usuarios-aplicacion', component: UsuarioAppListComponent },

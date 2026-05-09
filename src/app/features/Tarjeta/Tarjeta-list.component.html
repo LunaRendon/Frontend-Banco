@@ -71,6 +71,11 @@
             <th>ID Cuenta</th>
 
             <th>Fecha de creación</th>
+            <th pSortableColumn="fecha_creacion">
+                Fecha de creación
+                <p-sortIcon field="fecha_creacion" />
+            </th>
+
 
             <th style="width: 8rem"></th>
         </tr>
@@ -100,8 +105,15 @@
             <td>{{ tarjeta.id_cuenta }}</td>
 
             <td>
+
                 {{ tarjeta.fecha_creacion | date: 'short' }}
             </td>
+
+
+                 {{ tarjeta.fecha_creacion | date:'short' }} 
+            </td>
+
+
 
             <td *ngIf="authService.isAdmin()">
                 <p-button
@@ -167,6 +179,7 @@
                     Tipo de tarjeta
                 </label>
 
+
                 <input
                     id="tipo_tarjeta"
                     type="text"
@@ -175,6 +188,29 @@
                     required
                     fluid
                 />
+
+            <div>
+                <label for="menu">Tipo de tarjeta:</label>
+
+                <select
+                    id="menu"
+                    name="tipo_tarjeta"
+                    [(ngModel)]="tarjeta.tipo_tarjeta"
+                >
+
+                    <option value="">Seleccione una opción</option>
+
+                    <option value="Credito">
+                        Crédito
+                    </option>
+
+                    <option value="Debito">
+                        Débito
+                    </option>
+
+                </select>
+            </div>
+
 
                 <small
                     class="text-red-500"
