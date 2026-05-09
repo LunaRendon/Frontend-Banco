@@ -1,0 +1,297 @@
+<p-toolbar styleClass="mb-6" *ngIf="authService.isAdmin()">
+    <ng-template #start>
+        <p-button
+            label="Nuevo"
+            icon="pi pi-plus"
+            severity="secondary"
+            class="mr-2"
+            (onClick)="openNew()"
+        />
+
+        <p-button
+            label="Eliminar"
+            icon="pi pi-trash"
+            outlined
+            severity="secondary"
+            [disabled]="!selectedTarjetas || !selectedTarjetas.length"
+            (onClick)="deleteSelectedTarjetas()"
+        />
+    </ng-template>
+</p-toolbar>
+
+<p-table
+    #dt
+    [value]="tarjetas()"
+    [(selection)]="selectedTarjetas"
+    dataKey="id_tarjeta"
+    [paginator]="true"
+    [rows]="10"
+    [loading]="loading"
+    [rowHover]="true"
+    [globalFilterFields]="[
+        'numero_tarjeta',
+        'tipo_tarjeta',
+        'estado'
+    ]"
+    [rowsPerPageOptions]="[10, 20, 30]"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} tarjetas"
+>
+    <ng-template #caption>
+        <div class="flex items-center justify-between">
+            <h5 class="m-0">Gestión de Tarjetas</h5>
+
+            <p-iconfield>
+                <p-inputicon styleClass="pi pi-search" />
+
+                <input
+                    pInputText
+                    type="text"
+                    (input)="onGlobalFilter($event)"
+                    placeholder="Buscar..."
+                />
+            </p-iconfield>
+        </div>
+    </ng-template>
+
+    <ng-template #header>
+        <tr>
+            <th *ngIf="authService.isAdmin()" style="width: 8rem"></th>
+
+            <th>Número de tarjeta</th>
+
+            <th pSortableColumn="tipo_tarjeta">
+                Tipo
+                <p-sortIcon field="tipo_tarjeta" />
+            </th>
+
+            <th>Fecha de vencimiento</th>
+
+            <th>Estado</th>
+
+            <th>ID Cuenta</th>
+
+            <th>Fecha de creación</th>
+
+            <th style="width: 8rem"></th>
+        </tr>
+    </ng-template>
+
+    <ng-template #body let-tarjeta>
+        <tr>
+            <td *ngIf="authService.isAdmin()">
+                <p-tableCheckbox [value]="tarjeta" />
+            </td>
+
+            <td>{{ tarjeta.numero_tarjeta }}</td>
+
+            <td>{{ tarjeta.tipo_tarjeta }}</td>
+
+            <td>
+                {{ tarjeta.fecha_vencimiento | date: 'MM/yyyy' }}
+            </td>
+
+            <td>
+                <p-tag
+                    [value]="tarjeta.estado ? 'Activa' : 'Bloqueada'"
+                    [severity]="tarjeta.estado ? 'success' : 'danger'"
+                />
+            </td>
+
+            <td>{{ tarjeta.id_cuenta }}</td>
+
+            <td>
+                {{ tarjeta.fecha_creacion | date: 'short' }}
+            </td>
+
+            <td *ngIf="authService.isAdmin()">
+                <p-button
+                    icon="pi pi-pencil"
+                    class="mr-2"
+                    [outlined]="true"
+                    [rounded]="true"
+                    (click)="editTarjeta(tarjeta)"
+                />
+
+                <p-button
+                    icon="pi pi-trash"
+                    severity="danger"
+                    [outlined]="true"
+                    [rounded]="true"
+                    (click)="deleteTarjeta(tarjeta)"
+                />
+            </td>
+        </tr>
+    </ng-template>
+</p-table>
+
+<p-dialog
+    [(visible)]="tarjetaDialog"
+    [style]="{ width: '450px' }"
+    header="Detalles de la Tarjeta"
+    [modal]="true"
+>
+    <ng-template #content>
+        <div class="flex flex-col gap-4">
+
+            <div>
+                <label
+                    for="numero_tarjeta"
+                    class="block font-bold mb-2"
+                >
+                    Número de tarjeta
+                </label>
+
+                <input
+                    id="numero_tarjeta"
+                    type="text"
+                    pInputText
+                    [(ngModel)]="tarjeta.numero_tarjeta"
+                    required
+                    autofocus
+                    fluid
+                />
+
+                <small
+                    class="text-red-500"
+                    *ngIf="submitted && !tarjeta.numero_tarjeta"
+                >
+                    El número de tarjeta es obligatorio.
+                </small>
+            </div>
+
+            <div>
+                <label
+                    for="tipo_tarjeta"
+                    class="block font-bold mb-2"
+                >
+                    Tipo de tarjeta
+                </label>
+
+                <input
+                    id="tipo_tarjeta"
+                    type="text"
+                    pInputText
+                    [(ngModel)]="tarjeta.tipo_tarjeta"
+                    required
+                    fluid
+                />
+
+                <small
+                    class="text-red-500"
+                    *ngIf="submitted && !tarjeta.tipo_tarjeta"
+                >
+                    El tipo de tarjeta es obligatorio.
+                </small>
+            </div>
+
+            <div>
+                <label
+                    for="fecha_vencimiento"
+                    class="block font-bold mb-2"
+                >
+                    Fecha de vencimiento
+                </label>
+
+                <input
+                    id="fecha_vencimiento"
+                    type="date"
+                    pInputText
+                    [(ngModel)]="tarjeta.fecha_vencimiento"
+                    required
+                    fluid
+                />
+
+                <small
+                    class="text-red-500"
+                    *ngIf="submitted && !tarjeta.fecha_vencimiento"
+                >
+                    La fecha de vencimiento es obligatoria.
+                </small>
+            </div>
+
+            <div>
+                <label
+                    for="cvv"
+                    class="block font-bold mb-2"
+                >
+                    CVV
+                </label>
+
+                <input
+                    id="cvv"
+                    type="password"
+                    pInputText
+                    [(ngModel)]="tarjeta.cvv"
+                    required
+                    fluid
+                    maxlength="4"
+                />
+
+                <small
+                    class="text-red-500"
+                    *ngIf="submitted && !tarjeta.cvv"
+                >
+                    El CVV es obligatorio.
+                </small>
+            </div>
+
+            <div>
+                <label
+                    for="estado"
+                    class="block font-bold mb-2"
+                >
+                    Estado
+                </label>
+
+                <p-inputSwitch
+                    [(ngModel)]="tarjeta.estado"
+                />
+            </div>
+
+            <div>
+                <label
+                    for="id_cuenta"
+                    class="block font-bold mb-2"
+                >
+                    ID Cuenta
+                </label>
+
+                <input
+                    id="id_cuenta"
+                    type="text"
+                    pInputText
+                    [(ngModel)]="tarjeta.id_cuenta"
+                    required
+                    fluid
+                />
+
+                <small
+                    class="text-red-500"
+                    *ngIf="submitted && !tarjeta.id_cuenta"
+                >
+                    El ID de cuenta es obligatorio.
+                </small>
+            </div>
+
+        </div>
+    </ng-template>
+
+    <ng-template #footer>
+        <p-button
+            label="Cancelar"
+            icon="pi pi-times"
+            text
+            (click)="hideDialog()"
+        />
+
+        <p-button
+            label="Guardar"
+            icon="pi pi-check"
+            (click)="saveTarjeta()"
+        />
+    </ng-template>
+</p-dialog>
+
+<p-confirmdialog [style]="{ width: '450px' }" />
+
+<p-toast />

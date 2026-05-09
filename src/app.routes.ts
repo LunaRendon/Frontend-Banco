@@ -8,6 +8,7 @@ import { ClienteListComponent } from 'src/app/features/Cliente/Cliente-list.comp
 import { UsuarioListComponent } from 'src/app/features/Usuario/Usuario-lis.component';
 import { Dashboard } from 'src/app/features/dashboard/dashboard';
 import { PerfilComponent } from 'src/app/features/perfil/perfil.component';
+import { TarjetaListComponent } from 'src/app/features/Tarjeta/Tarjeta-list.component';
 
 export const appRoutes: Routes = [
     {
@@ -25,7 +26,8 @@ export const appRoutes: Routes = [
             { path: 'bancos', component: BancoListComponent },
             { path: 'perfil', component: PerfilComponent },
             { path: 'clientes', component: ClienteListComponent },
-            { path: 'usuarios', component: UsuarioListComponent }
+            { path: 'usuarios', component: UsuarioListComponent },
+            { path: 'tarjetas', component: TarjetaListComponent }
         ]
     },
     { path: '**', redirectTo: 'auth/login' }
