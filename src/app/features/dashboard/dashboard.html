@@ -1,27 +1,98 @@
-<!-- Dashboard principal mejorado estéticamente -->
 <div class="dashboard-wrapper">
-    <!-- Header del Dashboard -->
     <div class="dashboard-header">
         <div>
             <h1 class="dashboard-title">Panel de Control</h1>
-            <p class="dashboard-subtitle">Resumen del sistema bancario</p>
+            <p class="dashboard-subtitle">{{ authService.isAdmin() ? 'Resumen del sistema bancario' : 'Mi cuenta bancaria' }}</p>
         </div>
-        <div class="dashboard-date">{{ hoy | date:'EEEE, d MMMM yyyy':'':'es' }}</div>
+        <div class="dashboard-date">{{ hoy | date:'dd/MM/yyyy' }}</div>
     </div>
 
-    <!-- Tarjetas de estadísticas -->
-    <section class="section">
-        <app-stats-widget></app-stats-widget>
-    </section>
+    <!-- VISTA ADMIN -->
+    <ng-container *ngIf="authService.isAdmin()">
+        <section class="section">
+            <app-stats-widget></app-stats-widget>
+        </section>
+        <section class="section grid-2">
+            <app-recent-clientes-widget></app-recent-clientes-widget>
+            <app-tipo-cuentas-widget></app-tipo-cuentas-widget>
+        </section>
+        <section class="section">
+            <app-notifications-widget></app-notifications-widget>
+        </section>
+    </ng-container>
 
-    <!-- Fila de widgets -->
-    <section class="section grid-2">
-        <app-recent-clientes-widget></app-recent-clientes-widget>
-        <app-tipo-cuentas-widget></app-tipo-cuentas-widget>
-    </section>
+    <!-- VISTA CLIENTE -->
+    <ng-container *ngIf="authService.isConsumidor()">
 
-    <!-- Notificaciones -->
-    <section class="section">
-        <app-notifications-widget></app-notifications-widget>
-    </section>
+        <div *ngIf="loadingCuenta" class="card">
+            <p style="color:#94a3b8">Cargando tu cuenta...</p>
+        </div>
+
+        <div *ngIf="!loadingCuenta && cuenta" class="card">
+            <div class="saldo-label">Saldo disponible</div>
+            <div class="saldo-amount">{{ cuenta.saldo | currency:'COP':'symbol':'1.0-0' }}</div>
+            <div style="margin-top:1rem; display:flex; gap:1rem; align-items:center; flex-wrap:wrap;">
+                <span style="font-size:0.875rem; color:#64748b;">N° {{ cuenta.numero_cuenta }}</span>
+                <span [class]="'badge-tipo ' + (cuenta.tipo_cuenta === 'ahorros' ? 'badge-ahorros' : 'badge-corriente')">
+                    {{ cuenta.tipo_cuenta | titlecase }}
+                </span>
+                <span [style.color]="cuenta.estado ? '#16a34a' : '#dc2626'" style="font-size:0.8rem; font-weight:600;">
+                    {{ cuenta.estado ? '● Activa' : '● Inactiva' }}
+                </span>
+            </div>
+            <div style="margin-top:1.25rem; display:flex; gap:0.75rem; flex-wrap:wrap;">
+                <button class="btn-accion btn-deposito" (click)="abrirModal('deposito')">⬇ Depositar</button>
+                <button class="btn-accion btn-retiro" (click)="abrirModal('retiro')">⬆ Retirar</button>
+                <button class="btn-accion btn-transferencia" (click)="abrirModal('transferencia')">↔ Transferir</button>
+            </div>
+        </div>
+
+        <div *ngIf="!loadingCuenta && !cuenta" class="card">
+            <p style="color:#94a3b8">No se encontró información de tu cuenta.</p>
+        </div>
+
+        <div class="card">
+            <h3 style="font-size:1rem; font-weight:700; margin:0 0 1rem;">Mis últimas operaciones</h3>
+            <div *ngIf="operaciones.length === 0" style="color:#94a3b8; font-size:0.875rem;">Sin operaciones recientes.</div>
+            <div *ngFor="let op of operaciones" class="op-row">
+                <div>
+                    <div class="op-tipo">{{ op.tipo_operacion | titlecase }}</div>
+                    <div class="op-fecha">{{ op.fecha | date:'short' }}</div>
+                </div>
+                <div [class]="getMontoCss(op)" style="font-size:1rem;">
+                    {{ getMontoPrefix(op) }}{{ op.monto | currency:'COP':'symbol':'1.0-0' }}
+                </div>
+            </div>
+        </div>
+    </ng-container>
+</div>
+
+<!-- MODAL OPERACIÓN -->
+<div class="modal-overlay" *ngIf="modalVisible" (click)="cerrarModal()">
+    <div class="modal" (click)="$event.stopPropagation()">
+        <div class="modal-title">
+            {{ tipoOperacion === 'deposito' ? '⬇ Depositar' : tipoOperacion === 'retiro' ? '⬆ Retirar' : '↔ Transferir' }}
+        </div>
+
+        <label class="form-label">Monto</label>
+        <input type="number" class="form-input" [(ngModel)]="monto" placeholder="0" min="1" />
+
+        <ng-container *ngIf="tipoOperacion === 'transferencia'">
+            <label class="form-label">Cuenta destino</label>
+            <select class="form-select" [(ngModel)]="cuentaDestino">
+                <option value="">Selecciona una cuenta</option>
+                <option *ngFor="let c of todasCuentas" [value]="c.id_cuenta">
+                    {{ c.numero_cuenta }} — {{ c.tipo_cuenta | titlecase }}
+                </option>
+            </select>
+        </ng-container>
+
+        <div class="msg-error" *ngIf="msgError">{{ msgError }}</div>
+        <div class="msg-success" *ngIf="msgExito">{{ msgExito }}</div>
+
+        <button class="btn-primary" (click)="ejecutarOperacion()" [disabled]="procesando">
+            {{ procesando ? 'Procesando...' : 'Confirmar' }}
+        </button>
+        <button class="btn-cancel" (click)="cerrarModal()">Cancelar</button>
+    </div>
 </div>

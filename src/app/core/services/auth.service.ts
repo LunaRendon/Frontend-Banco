@@ -36,6 +36,10 @@ export class AuthService {
                         })
                     );
                     this.currentUserSubject.next({ nombre_usuario: username, rol: response.rol });
+
+                    if (response.rol === 'cliente' && response.id_cuenta) {
+                        localStorage.setItem('id_cuenta', response.id_cuenta);
+                    }
                 })
             );
     }
