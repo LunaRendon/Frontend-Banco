@@ -8,13 +8,13 @@
                     <img src="assets/logos/logobanco.jpg" alt="Logo Banco" class="mx-auto mb-4 w-24 h-auto" />
                     <i class="pi pi-user-plus text-3xl text-primary mb-3"></i>
                     <div class="text-surface-900 dark:text-surface-0 text-2xl font-semibold mb-2">Crear Cuenta</div>
-                    <span class="text-muted-color font-medium text-sm">Regístrate con tu número de cuenta bancaria</span>
+                    <span class="text-muted-color font-medium text-sm">Regístrate con tu ID de cliente</span>
                 </div>
 
                 <div>
                     <input pInputText type="text" placeholder="Nombre de usuario" class="w-full mb-3" [(ngModel)]="username" />
 
-                    <input pInputText type="text" placeholder="ID de tu cuenta bancaria" class="w-full mb-3" [(ngModel)]="id_cuenta" />
+                    <input pInputText type="text" placeholder="ID del cliente" class="w-full mb-3" [(ngModel)]="id_cliente" />
 
                     <p-password [(ngModel)]="contrasena" placeholder="Contraseña" [feedback]="false" [toggleMask]="true" styleClass="w-full mb-3"></p-password>
 

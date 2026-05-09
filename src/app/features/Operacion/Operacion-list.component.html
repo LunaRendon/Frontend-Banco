@@ -1,0 +1,95 @@
+<p-toolbar styleClass="mb-6" *ngIf="authService.isAdmin()">
+  <ng-template #start>
+    <p-button label="Nueva" icon="pi pi-plus" severity="secondary" class="mr-2" (onClick)="openNew()" />
+    <p-button label="Eliminar" icon="pi pi-trash" outlined severity="secondary"
+      [disabled]="!selectedOperaciones || !selectedOperaciones.length"
+      (onClick)="deleteSelectedOperaciones()" />
+  </ng-template>
+</p-toolbar>
+
+<p-table #dt [value]="operaciones()" [(selection)]="selectedOperaciones" dataKey="id_operacion"
+  [paginator]="true" [rows]="10" [loading]="loading" [rowHover]="true"
+  [globalFilterFields]="['tipo_operacion','id_cuenta_origen','id_cuenta_destino']"
+  [rowsPerPageOptions]="[10,20,30]">
+
+  <ng-template #caption>
+    <div class="flex items-center justify-between">
+      <h5 class="m-0">Gestión de Operaciones</h5>
+      <p-iconfield>
+        <p-inputicon styleClass="pi pi-search" />
+        <input pInputText type="text" (input)="onGlobalFilter($event)" placeholder="Buscar..." />
+      </p-iconfield>
+    </div>
+  </ng-template>
+
+  <ng-template #header>
+    <tr>
+      <th style="width:3rem"><p-tableHeaderCheckbox /></th>
+      <th pSortableColumn="tipo_operacion">Tipo <p-sortIcon field="tipo_operacion" /></th>
+      <th pSortableColumn="monto">Monto <p-sortIcon field="monto" /></th>
+      <th>Cuenta Origen</th>
+      <th>Cuenta Destino</th>
+      <th pSortableColumn="fecha">Fecha <p-sortIcon field="fecha" /></th>
+      <th *ngIf="authService.isAdmin()" style="width:8rem"></th>
+    </tr>
+  </ng-template>
+
+  <ng-template #body let-op>
+    <tr>
+      <td><p-tableCheckbox [value]="op" /></td>
+      <td>
+        <span [class]="getTipoSeverity(op.tipo_operacion) + ' font-bold'">
+          {{ getTipoLabel(op.tipo_operacion) }}
+        </span>
+      </td>
+      <td>{{ op.monto | currency:'COP':'symbol':'1.0-0' }}</td>
+      <td>{{ op.id_cuenta_origen ? getNombreCuenta(op.id_cuenta_origen) : '-' }}</td>
+      <td>{{ op.id_cuenta_destino ? getNombreCuenta(op.id_cuenta_destino) : '-' }}</td>
+      <td>{{ op.fecha | date:'short' }}</td>
+      <td *ngIf="authService.isAdmin()">
+        <p-button icon="pi pi-pencil" class="mr-2" [outlined]="true" [rounded]="true" (click)="editOperacion(op)" />
+        <p-button icon="pi pi-trash" severity="danger" [outlined]="true" [rounded]="true" (click)="deleteOperacion(op)" />
+      </td>
+    </tr>
+  </ng-template>
+</p-table>
+
+<p-dialog [(visible)]="operacionDialog" [style]="{width: '500px'}" header="Detalles de la Operación" [modal]="true">
+  <ng-template #content>
+    <div class="flex flex-col gap-4">
+      <div>
+        <label class="block font-bold mb-2">Tipo de Operación</label>
+        <select [(ngModel)]="operacion.tipo_operacion" class="w-full p-2 border rounded">
+          <option *ngFor="let t of tiposOperacion" [value]="t.value">{{ t.label }}</option>
+        </select>
+        <small class="text-red-500" *ngIf="submitted && !operacion.tipo_operacion">Obligatorio.</small>
+      </div>
+      <div>
+        <label class="block font-bold mb-2">Monto</label>
+        <input type="number" pInputText [(ngModel)]="operacion.monto" required fluid />
+        <small class="text-red-500" *ngIf="submitted && !operacion.monto">Obligatorio.</small>
+      </div>
+      <div>
+        <label class="block font-bold mb-2">Cuenta Origen</label>
+        <select [(ngModel)]="operacion.id_cuenta_origen" class="w-full p-2 border rounded">
+          <option value="">Sin cuenta origen</option>
+          <option *ngFor="let c of cuentas" [value]="c.id_cuenta">{{ c.numero_cuenta }}</option>
+        </select>
+      </div>
+      <div>
+        <label class="block font-bold mb-2">Cuenta Destino</label>
+        <select [(ngModel)]="operacion.id_cuenta_destino" class="w-full p-2 border rounded">
+          <option value="">Sin cuenta destino</option>
+          <option *ngFor="let c of cuentas" [value]="c.id_cuenta">{{ c.numero_cuenta }}</option>
+        </select>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #footer>
+    <p-button label="Cancelar" icon="pi pi-times" text (click)="hideDialog()" />
+    <p-button label="Guardar" icon="pi pi-check" (click)="saveOperacion()" />
+  </ng-template>
+</p-dialog>
+
+<p-confirmdialog [style]="{ width: '450px' }" />
+<p-toast />

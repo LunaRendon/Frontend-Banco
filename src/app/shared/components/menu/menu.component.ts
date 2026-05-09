@@ -17,7 +17,7 @@ export class AppMenu {
     constructor(
         private authService: AuthService,
         private router: Router
-    ) {}
+    ) { }
 
     ngOnInit() {
         const user = this.authService.getCurrentUser();
@@ -31,15 +31,17 @@ export class AppMenu {
             {
                 label: 'Gestión',
                 items: [
-                    { label: 'Bancos', icon: 'pi pi-fw pi-book', routerLink: ['/bancos'] },
-                    { label: 'Clientes', icon: 'pi pi-fw pi-tags', routerLink: ['/clientes'] },
-                    ...(isAdmin ? [{ label: 'Cuentas', icon: 'pi pi-fw pi-users', routerLink: ['/cuentas'] }] : []),
-                    { label: 'Tarjetas ', icon: 'pi pi-fw pi-file', routerLink: ['/tarjetas'] },
-                    ...(isAdmin ? [{ label: 'Operaciones', icon: 'pi pi-fw pi-shopping-cart', routerLink: ['/operaciones'] }] : []),
-                    ...(isAdmin ? [{ label: 'Usuarios de la aplicación', icon: 'pi pi-fw pi-calendar-plus', routerLink: ['/usuarios-aplicacion'] }] : []),
+                    { label: 'Bancos', icon: 'pi pi-fw pi-building-columns', routerLink: ['/bancos'] },
+                    ...(isAdmin ? [{ label: 'Clientes', icon: 'pi pi-fw pi-users', routerLink: ['/clientes'] }] : []),
+                    ...(isAdmin ? [{ label: 'Cuentas', icon: 'pi pi-fw pi-address-book', routerLink: ['/cuentas'] }] : []),
+                    { label: 'Tarjetas ', icon: 'pi pi-fw pi-credit-card', routerLink: ['/tarjetas'] },
+                    ...(isAdmin ? [{ label: 'Operaciones', icon: 'pi pi-fw pi-calculator', routerLink: ['/operaciones'] }] : []),
+                    { label: 'Préstamos', icon: 'pi pi-fw pi pi-fw pi-money-bill', routerLink: ['/prestamos'] },
+                    ...(isAdmin ? [{ label: 'Usuarios de la aplicación', icon: 'pi pi-fw pi-mobile', routerLink: ['/usuarios-aplicacion'] }] : []),
                     ...(isAdmin ? [{ label: 'Usuarios', icon: 'pi pi-fw pi-user', routerLink: ['/usuarios'] }] : [])
                 ]
             },
+
 
             {
                 label: 'Cuenta',

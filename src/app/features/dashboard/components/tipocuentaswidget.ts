@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CuentaService } from 'src/app/core/services/Cuenta.service';
+import { BancoService } from 'src/app/core/services/Banco.service';
+import { ClienteService } from 'src/app/core/services/Cliente.service';
 
 /**
  * TipoCuentasWidget CORREGIDO:
@@ -136,27 +138,74 @@ export class TipoCuentasWidget implements OnInit {
     totalCuentas = 0;
     loading = true;
 
-    constructor(private cuentaService: CuentaService) {}
+    constructor(
+    private cuentaService: CuentaService,
+    private bancoService: BancoService,
+    private clienteService: ClienteService
+) {}
 
     ngOnInit() {
         this.cargarCuentas();
     }
 
     cargarCuentas() {
-        this.cuentaService.getCuentas({ page: 1, limit: 1000 }, {}).subscribe({
-            next: (cuentas: any[]) => {
-                const conteo: Record<string, number> = {};
-                (cuentas || []).forEach((c) => {
-                    const tipo = c.tipo_cuenta || 'Sin tipo';
-                    conteo[tipo] = (conteo[tipo] || 0) + 1;
+    this.bancoService.getBancos({ page: 1, limit: 100 }).subscribe({
+        next: (bancos: any[]) => {
+            let todasCuentas: any[] = [];
+            let completadas = 0;
+            if (!bancos || bancos.length === 0) { this.loading = false; return; }
+
+            bancos.forEach(banco => {
+                this.clienteService.getClientes(banco.id_banco, { page: 1, limit: 100 }).subscribe({
+                    next: (clientes: any[]) => {
+                        let subCompletadas = 0;
+                        if (!clientes || clientes.length === 0) {
+                            completadas++;
+                            if (completadas === bancos.length) this.procesarCuentas(todasCuentas);
+                            return;
+                        }
+                        clientes.forEach((c: any) => {
+                            this.cuentaService.getCuentasByCliente(c.id_cliente).subscribe({
+                                next: (cuentas: any[]) => {
+                                    todasCuentas = [...todasCuentas, ...(cuentas || [])];
+                                    subCompletadas++;
+                                    if (subCompletadas === clientes.length) {
+                                        completadas++;
+                                        if (completadas === bancos.length) this.procesarCuentas(todasCuentas);
+                                    }
+                                },
+                                error: () => {
+                                    subCompletadas++;
+                                    if (subCompletadas === clientes.length) {
+                                        completadas++;
+                                        if (completadas === bancos.length) this.procesarCuentas(todasCuentas);
+                                    }
+                                }
+                            });
+                        });
+                    },
+                    error: () => {
+                        completadas++;
+                        if (completadas === bancos.length) this.procesarCuentas(todasCuentas);
+                    }
                 });
-                this.tipos = Object.entries(conteo).map(([nombre, cantidad]) => ({ nombre, cantidad }));
-                this.totalCuentas = cuentas?.length || 0;
-                this.loading = false;
-            },
-            error: () => {
-                this.loading = false;
-            }
-        });
-    }
+            });
+        },
+        error: () => { this.loading = false; }
+    });
+}
+
+procesarCuentas(cuentas: any[]) {
+    const unique = Array.from(
+        new Map(cuentas.map(c => [c.id_cuenta, c])).values()
+    );
+    const conteo: Record<string, number> = {};
+    unique.forEach(c => {
+        const tipo = c.tipo_cuenta || 'Sin tipo';
+        conteo[tipo] = (conteo[tipo] || 0) + 1;
+    });
+    this.tipos = Object.entries(conteo).map(([nombre, cantidad]) => ({ nombre, cantidad }));
+    this.totalCuentas = unique.length;
+    this.loading = false;
+}
 }
